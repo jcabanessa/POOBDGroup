@@ -5,11 +5,17 @@ package poobdgroup.vista;
 
 import poobdgroup.controlador.OnlineStore;
 import poobdgroup.excepciones.TiendaException;
+import poobdgroup.modelo.Datos;
+
 import java.util.Scanner;
 
 public class Main {
-    private OnlineStore controlador = new OnlineStore();
+    private OnlineStore controlador;
     private final Scanner sc = new Scanner(System.in);
+
+    public Main() {
+        controlador = new OnlineStore();
+    }
 
     public static void main(String[] args) throws TiendaException {
         Main prg = new Main();
