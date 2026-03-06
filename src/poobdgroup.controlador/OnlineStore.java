@@ -1,7 +1,10 @@
 package poobdgroup.controlador;
 
-import poobdgroup.modelo.*;
 import poobdgroup.excepciones.TiendaException;
+import poobdgroup.modelo.Articulo;
+import poobdgroup.modelo.Cliente;
+import poobdgroup.modelo.Pedido;
+
 import java.util.ArrayList;
 
 public class OnlineStore {
@@ -38,86 +41,89 @@ public class OnlineStore {
         clientes.add(cli);
     }
 
-    public void mostrarClientes() throws TiendaException {
-        if (clientes.isEmpty()){
-            throw new TiendaException("Error: No hay clientes registrados en el sistema.")
+    public void mostrarClientes(String tipo) throws TiendaException {
+        if (clientes.isEmpty()) {
+            throw new TiendaException("Error: No hay clientes registrados en el sistema.");
         } else {
-            System.out.println("--- LISTADO DE CLIENTES ---")
-            for (Cliente c: clientes){
-                System.out.println(c.toString + " | Tipo: " + cliente.tipoCliente())
+            System.out.println("--- LISTADO DE CLIENTES ---");
+            for (Cliente c : clientes) {
+                // Si tipo es "Todos" o coincide con el tipo del cliente, lo muestra
+                if (tipo.equals("Todos") || c.tipoCliente().equalsIgnoreCase(tipo)) {
+                    System.out.println(c);
+
+                }
             }
         }
     }
-
-    public void addArticulo(Articulo art) throws TiendaException {
-        if (articulos.stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
-            throw new TiendaException("Error: Ya existe un artículo con ese código.");
+        public void addArticulo (Articulo art) throws TiendaException {
+            if (articulos.stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
+                throw new TiendaException("Error: Ya existe un artículo con ese código.");
+            }
+            articulos.add(art);
         }
-        articulos.add(art);
-    }
 
-    public void mostrarArticulos() throws TiendaException {
-        if (articulos.isEmpty()){
-            throw new TiendaException("Error: No hay articulos que mostrar.");
-        } else {
-            System.out.println("--- LISTADO DE ARTICULOS ---")
-            for (Articulo a: articulos){
-                System.out.println(a.toString)
+        public void mostrarArticulos () throws TiendaException {
+            if (articulos.isEmpty()) {
+                throw new TiendaException("Error: No hay articulos que mostrar.");
+            } else {
+                System.out.println("--- LISTADO DE ARTICULOS ---");
+                for (Articulo a : articulos) {
+                    System.out.println(a.toString());
+                }
             }
         }
-    }
 
-    public void addPedido(Pedido ped) throws TiendaException{
-        if (pedidos.stream().anyMatch(p -> p.getNumPedido().equals(ped.getNumPedido()))) {
-            throw new TiendaException("Error: Ya existe un pedido con ese número.")
+        public void addPedido (Pedido ped) throws TiendaException {
+            if (pedidos.stream().anyMatch(p -> p.getNumPedido().equals(ped.getNumPedido()))) {
+                throw new TiendaException("Error: Ya existe un pedido con ese número.");
+            }
+            pedidos.add(ped);
+
         }
-        pedidos.add(ped);
 
-    }
+        public void eliminarPedido (String numPedido) throws TiendaException {
+            Pedido p = pedidos.stream()
+                    .filter(pedido -> pedido.getNumPedido().equals(numPedido))
+                    .findFirst()
+                    .orElseThrow(() -> new TiendaException("Error: El pedido no existe."));
 
-    public void eliminarPedido(String numPedido) throws TiendaException {
-        Pedido p = pedidos.stream()
-                .filter(pedido -> pedido.getNumPedido().equals(numPedido))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Error: El pedido no existe."));
-
-        if (p.pedidoEnviado()) {
-            throw new TiendaException("Error: No se puede eliminar un pedido que ya ha sido enviado.");
+            if (p.pedidoEnviado()) {
+                throw new TiendaException("Error: No se puede eliminar un pedido que ya ha sido enviado.");
+            }
+            pedidos.remove(p);
         }
-        pedidos.remove(p);
-    }
 
-    public void mostrarPedidosPendientes() throws TiendaException {
-        System.out.println("=== PEDIDOS PENDIENTES ===");
-        boolean found = false;
-        for (Pedido p : pedidos){
-            if (!p.pedidoEnviado()){
-                System.out.println(p);
+        public void mostrarPedidosPendientes () throws TiendaException {
+            System.out.println("=== PEDIDOS PENDIENTES ===");
+            boolean found = false;
+            for (Pedido p : pedidos) {
+                if (!p.pedidoEnviado()) {
+                    System.out.println(p);
+                    found = true;
+                }
+            }
+            if (!found) throw new TiendaException("Error: No hay pedidos pendientes.");
+        }
+
+        public void mostrarPedidosEnviados () throws TiendaException {
+            System.out.println("=== PEDIDOS ENVIADOS ===");
+            boolean found = false;
+            for (Pedido p : pedidos) {
+                if (p.pedidoEnviado())
+                    System.out.println(p);
                 found = true;
             }
+            if (!found) throw new TiendaException("Error: No hay pedidos enviados");
         }
-        if (!found) throw new TinedaException("Error: No hay pedidos pendientes.");
-    }
 
-    public void mostrarPedidosEnviados() throws TiendaException {
-        System.out.println("=== PEDIDOS ENVIADOS ===");
-        boolean found = false;
-        for (Pedido p : pedidos){
-            if(p.pedidoEnviado())
-                System.out.println(p);
-                found = true;
+
+        //toString
+        @Override
+        public String toString () {
+            return "OnlineStore{" +
+                    "articulos=" + articulos +
+                    ", clientes=" + clientes +
+                    ", pedidos=" + pedidos +
+                    '}';
         }
-        if (!found) throw new TinedaException("Error: No hay pedidos enviados");
     }
-
-
-    //toString
-    @Override
-    public String toString() {
-        return "OnlineStore{" +
-                "articulos=" + articulos +
-                ", clientes=" + clientes +
-                ", pedidos=" + pedidos +
-                '}';
-    }
-}

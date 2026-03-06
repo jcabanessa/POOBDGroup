@@ -38,15 +38,17 @@ public class Pedido {
         // Lógica: si han pasado más de 'n' minutos desde la preparación, se considera enviado
         return LocalDateTime.now().isAfter(fecha.plusMinutes(articulo.getTiempoPreparacion()));
 
-    //toString
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "numPedido='" + numPedido + '\'' +
-                ", cantidad=" + cantidad +
-                ", fecha=" + fecha +
-                '}';
     }
+        //toString
+        @Override
+        public String toString() {
+            return "Pedido{" +
+                    "numPedido='" + numPedido + '\'' +
+                    ", cantidad=" + cantidad +
+                    ", fecha=" + fecha +
+                    '}';
+        }
+
 }
 
 
