@@ -11,52 +11,83 @@ import poobdgroup.modelo.ClientePremium;
 import poobdgroup.modelo.Datos;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static java.lang.Integer.parseInt;
 
 public class Main {
     private final OnlineStore controlador;
     private final Scanner sc = new Scanner(System.in);
+    DateTimeFormatter df = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd
 
     public Main() {
         Datos datos = new Datos(new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         controlador = new OnlineStore();
     }
 
-    public static void main(String[] args) throws TiendaException {
+    public static void main(String[] args) {
         Main prg = new Main();
         prg.inicio();
+
+
     }
 
-    void inicio() throws TiendaException {
+    void inicio() {
+        boolean salir = false;
         int opcion;
-        do {
-            System.out.println("\n--- GESTIÓN TIENDA ONLINE ---");
-            System.out.println("1. Gestión Artículos\n2. Gestión Clientes\n3. Gestión Pedidos\n0. Salir");
-            opcion = sc.nextInt();
-            sc.nextLine(); // Limpiar buffer
 
-            switch (opcion) {
-                case 1 -> gestionArticulos();
-                case 2 -> gestionClientes();
-                case 3 -> gestionPedidos();
-                case 0 -> System.out.println("Saliendo...");
-                default -> System.out.println("Opción no válida.");
+        do {
+            try {
+
+                System.out.println("\n--- GESTIÓN TIENDA ONLINE ---");
+                System.out.println("1. Gestión Artículos");
+                System.out.println("2. Gestión Clientes");
+                System.out.println("3. Gestión Pedidos");
+                System.out.println("0. Salir");
+                System.out.print("Opción: ");
+
+                opcion = parseInt(sc.nextLine());
+
+                switch (opcion) {
+
+                    case 1 -> gestionArticulos();
+                    case 2 -> gestionClientes();
+                    case 3 -> gestionPedidos();
+                    case 0 -> {
+                        salir = true;
+                        System.out.println("Saliendo...");
+                    }
+                    default -> System.out.println("Opción no válida");
+
+                }
+
+            } catch (TiendaException e) {
+
+                System.out.println("ERROR: " + e.getMessage());
+
+            } catch (Exception e) {
+
+                System.out.println("Error de formato. Introduce datos válidos.");
+                sc.nextLine();
+
             }
-        } while (opcion != 0);
+
+        } while (!salir);
     }
 
     void gestionArticulos() throws TiendaException {
-        System.out.println("\n1. Añadir Artículo\n2. Mostrar Todos los Artículos\n0. Volver");
-        int op = sc.nextInt();
-        sc.nextLine(); // Limpiar buffer
+        System.out.println("\n1. Añadir Artículo\n2. Mostrar Todos los Artículos\n0. Volver\nOpción: ");
+        int op = parseInt(sc.nextLine());
+
 
         switch (op) {
             case 1 -> {
                 System.out.print("Código: "); String cod = sc.nextLine();
                 System.out.print("Descripción: "); String des = sc.nextLine();
                 System.out.print("Precio: "); double pre = Double.parseDouble(sc.nextLine());
-                System.out.print("Envío: "); double env = Double.parseDouble(sc.nextLine());
+                System.out.print("Gastos de Envío: "); double env = Double.parseDouble(sc.nextLine());
                 System.out.print("Tiempo preparación (min): "); int t = sc.nextInt();
                 controlador.addArticulo(new Articulo(cod, des, pre, env, t));
                 System.out.println("Artículo añadido");
@@ -66,9 +97,8 @@ public class Main {
     }
 
     void gestionClientes() throws TiendaException {
-        System.out.println("\n1. Añadir Cliente\n2. Mostrar Todos los Clientes\n3. Mostrar Clientes Estandar\n4. Mostrar Clientes Premium\n0. Volver");
-        int op = sc.nextInt();
-        sc.nextLine(); // Limpiar buffer
+        System.out.println("\n1. Añadir Cliente\n2. Mostrar Todos los Clientes\n3. Mostrar Clientes Estandar\n4. Mostrar Clientes Premium\n0. Volver\nOpción: ");
+        int op = parseInt(sc.nextLine());
 
         switch (op) {
             case 1 -> {
@@ -91,15 +121,15 @@ public class Main {
     }
 
     void gestionPedidos() throws TiendaException {
-        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes (filtrar por emailCliente/Todos)\n4. Mostrar Pedidos Enviados (filtrar por emailCliente/Todos)\n0. Volver");
-        int op = sc.nextInt();
-        sc.nextLine(); // Limpiar buffer
+        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes (filtrar por emailCliente/Todos)\n4. Mostrar Pedidos Enviados (filtrar por emailCliente/Todos)\n0. Volver\nOpción: ");
+        int op = parseInt(sc.nextLine());
 
         switch (op) {
             case 1 -> {
                 System.out.print("Número pedido: "); String num = sc.nextLine();
                 System.out.print("Cantidad del artículo: "); int cant = sc.nextInt();
-                System.out.print("Fecha: "); LocalDateTime fec = LocalDateTime.parse(sc.nextLine());
+                System.out.print("Fecha: "); LocalDateTime fec = LocalDateTime.parse(sc.nextLine(),df);
+                if(sc.nextLine().isEmpty()) fec = LocalDateTime.now();
                 System.out.print("Código de Artículo:"); String art = sc.nextLine();
                 System.out.print("Email cliente: "); String mail = sc.nextLine();
                 controlador.addPedido(num, cant, fec, art, mail);

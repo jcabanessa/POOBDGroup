@@ -26,8 +26,8 @@ public abstract class Cliente {
 
     // Métodos abstractos que definen el comportamiento por tipo
     public abstract String tipoCliente();
-    public abstract float calcAnual();
-    public abstract float descuentoEnvio();
+    public abstract double calcAnual();
+    public abstract double descuentoEnvio();
 
     //toString
     @Override

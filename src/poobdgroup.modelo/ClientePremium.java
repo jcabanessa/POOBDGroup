@@ -7,6 +7,6 @@ public class ClientePremium extends Cliente{
     }
 
     @Override public String tipoCliente() { return "Premium"; }
-    @Override public float calcAnual() { return 30.0f; }
-    @Override public float descuentoEnvio() { return 0.20f; } // 20%
+    @Override public double calcAnual() { return 30.0f; }
+    @Override public double descuentoEnvio() { return 0.20f; } // 20%
 }

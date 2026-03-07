@@ -8,6 +8,6 @@ public class ClienteEstandar extends Cliente{
 
 
     @Override public String tipoCliente() { return "Estandar"; }
-    @Override public float calcAnual() { return 0; }
-    @Override public float descuentoEnvio() { return 0; }
+    @Override public double calcAnual() { return 0; }
+    @Override public double descuentoEnvio() { return 0; }
 }
