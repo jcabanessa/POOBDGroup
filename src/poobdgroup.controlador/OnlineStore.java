@@ -7,22 +7,23 @@ import poobdgroup.modelo.Datos;
 import poobdgroup.modelo.Pedido;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 
 public class OnlineStore {
     private Datos datos;
 
     //Constructor
     public OnlineStore(Datos datos) {
-        this.datos = datos;
+        this.datos = (datos != null) ? datos : new Datos();
     }
 
     public OnlineStore() {
-
+        this(new Datos());
     }
 
     //Métodos
     public void addCliente(Cliente cli) throws TiendaException {
+        if (cli == null) throw new TiendaException("Cliente nulo.");
         if (datos.getClientes().stream().anyMatch(c -> c.getEmail().equals(cli.getEmail()))) {
             throw new TiendaException("Error: El email ya está registrado.");
         }
@@ -44,6 +45,7 @@ public class OnlineStore {
         }
     }
     public void addArticulo (Articulo art) throws TiendaException {
+        if (art == null) throw new TiendaException("Artículo nulo.");
         if (datos.getArticulos().stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
             throw new TiendaException("Error: Ya existe un artículo con ese código.");
         }
@@ -66,7 +68,7 @@ public class OnlineStore {
                            LocalDateTime fecha,
                            String codArticulo,
                            String emailCliente) throws TiendaException {
-
+        if (numPedido == null || codArticulo == null || emailCliente == null) throw new TiendaException("Parámetros inválidos.");
         if (datos.getPedidos().stream()
                 .anyMatch(p -> p.getNumPedido().equals(numPedido)))
             throw new TiendaException("El pedido ya existe");
@@ -81,12 +83,12 @@ public class OnlineStore {
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
 
-        Pedido ped = new Pedido(numPedido, cantidad, fecha);
+        Pedido p = new Pedido(numPedido, cantidad, (fecha != null) ? fecha : LocalDateTime.now());
 
-        ped.setArticulo(articulo);
-        ped.setCliente(cliente);
+        p.setArticulo(articulo);
+        p.setCliente(cliente);
 
-        datos.getPedidos().add(ped);
+        datos.getPedidos().add(p);
 
     }
 
@@ -147,7 +149,9 @@ public class OnlineStore {
     @Override
     public String toString() {
         return "OnlineStore{" +
-                "datos=" + datos +
+                "articulos=" + datos.getArticulos() +
+                ", clientes=" + datos.getClientes() +
+                ", pedidos=" + datos.getPedidos() +
                 '}';
     }
 }

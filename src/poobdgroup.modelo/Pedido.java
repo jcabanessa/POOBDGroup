@@ -34,30 +34,39 @@ public class Pedido {
     }
 
     //Métodos
-    public float precioEnvio() {
+    public double precioEnvio() {
+        if(articulo == null) return 0.0;
         float costeBase = (float) articulo.getGastosEnvio();
         return costeBase * (1 - cliente.descuentoEnvio());
     }
 
     public double calcularPrecioTotal() {
+        if (articulo == null) return 0.0;
         return (cantidad * articulo.getPrecioVenta()) + precioEnvio();
     }
 
     public boolean pedidoEnviado() {
         // Lógica: si han pasado más de 'n' minutos desde la preparación, se considera enviado
+        if (articulo == null || fecha == null) return false;
         return LocalDateTime.now().isAfter(fecha.plusMinutes(articulo.getTiempoPreparacion()));
 
     }
-        //toString
-        @Override
-        public String toString() {
-            return "Pedido{" +
-                    "numPedido='" + numPedido + '\'' +
-                    ", cantidad=" + cantidad +
-                    ", fecha=" + fecha +
-                    '}';
-        }
 
+    @Override
+    public String toString() {
+        String art = (articulo == null) ? "sin-articulo" : articulo.getCodigo();
+        String cli = (cliente == null) ? "sin-cliente" : cliente.getEmail();
+        return "Pedido{" +
+                "numPedido='" + numPedido + '\'' +
+                ", cantidad=" + cantidad +
+                ", fechaHora=" + fecha +
+                ", articulo=" + art +
+                ", cliente=" + cli +
+                ", enviado=" + pedidoEnviado() +
+                ", total=" + calcularPrecioTotal() +
+                '}';
+    }
 }
+
 
 

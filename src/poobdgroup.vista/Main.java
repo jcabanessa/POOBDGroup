@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    private OnlineStore controlador;
-    private Scanner sc = new Scanner(System.in);
+    private final OnlineStore controlador;
+    private final Scanner sc = new Scanner(System.in);
 
     public Main() {
         Datos datos = new Datos(new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
@@ -40,6 +40,8 @@ public class Main {
                 case 1 -> gestionArticulos();
                 case 2 -> gestionClientes();
                 case 3 -> gestionPedidos();
+                case 0 -> System.out.println("Saliendo...");
+                default -> System.out.println("Opción no válida.");
             }
         } while (opcion != 0);
     }
@@ -53,10 +55,11 @@ public class Main {
             case 1 -> {
                 System.out.print("Código: "); String cod = sc.nextLine();
                 System.out.print("Descripción: "); String des = sc.nextLine();
-                System.out.print("Precio: "); float pre = sc.nextFloat();
-                System.out.print("Envío: "); float env = sc.nextFloat();
+                System.out.print("Precio: "); double pre = Double.parseDouble(sc.nextLine());
+                System.out.print("Envío: "); double env = Double.parseDouble(sc.nextLine());
                 System.out.print("Tiempo preparación (min): "); int t = sc.nextInt();
                 controlador.addArticulo(new Articulo(cod, des, pre, env, t));
+                System.out.println("Artículo añadido");
             }
             case 2 -> controlador.mostrarArticulos();
         }
@@ -70,12 +73,16 @@ public class Main {
         switch (op) {
             case 1 -> {
                 System.out.print("Nombre: "); String nom = sc.nextLine();
+                System.out.print("Domicilio: "); String dom = sc.nextLine();
+                System.out.print("NIF: "); String nif = sc.nextLine();
                 System.out.print("Email: "); String em = sc.nextLine();
                 System.out.print("¿Es Premium? (s/n): ");
                 if (sc.nextLine().equalsIgnoreCase("s"))
-                    controlador.addCliente(new ClientePremium(nom, "", "", em));
+                    controlador.addCliente(new ClientePremium(nom, dom, nif, em));
                 else
-                    controlador.addCliente(new ClienteEstandar(nom, "", "", em));
+                    controlador.addCliente(new ClienteEstandar(nom, dom, nif, em));
+
+                System.out.println("Cliente añadido");
             }
             case 2 -> controlador.mostrarClientes("Todos");
             case 3 -> controlador.mostrarClientes("Estandar");
@@ -84,7 +91,7 @@ public class Main {
     }
 
     void gestionPedidos() throws TiendaException {
-        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes de envío\n4. Mostrar Pedidos Enviados\n0. Volver");
+        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes (filtrar por emailCliente/Todos)\n4. Mostrar Pedidos Enviados (filtrar por emailCliente/Todos)\n0. Volver");
         int op = sc.nextInt();
         sc.nextLine(); // Limpiar buffer
 
@@ -95,16 +102,14 @@ public class Main {
                 System.out.print("Fecha: "); LocalDateTime fec = LocalDateTime.parse(sc.nextLine());
                 System.out.print("Código de Artículo:"); String art = sc.nextLine();
                 System.out.print("Email cliente: "); String mail = sc.nextLine();
-                // Aquí deberías buscar si el cliente existe en el controlador antes de seguir
-
-                controlador.addPedido(num, cant, LocalDateTime.now(), art, mail);
+                controlador.addPedido(num, cant, fec, art, mail);
                 System.out.println("Pedido registrado.");
             }
             case 2 -> {
                 System.out.print("Número de pedido a eliminar: ");
                 String num = sc.nextLine();
                 if (controlador.eliminarPedido(num)) System.out.println("Eliminado.");
-                else System.out.println("No se pudo eliminar (no existe o ya enviado).");
+                else throw new TiendaException("Erro: No se pudo eliminar (no existe o ya enviado).");
             }
             case 3 -> {
                 System.out.print("Introduce Email del cliente o Todos: ");

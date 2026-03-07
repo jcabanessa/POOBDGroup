@@ -8,10 +8,13 @@ public class Datos {
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
 
 
+    public Datos() {}
+
+
     public Datos(ArrayList<Articulo> articulos, ArrayList<Cliente> clientes, ArrayList<Pedido> pedidos) {
-        this.articulos = articulos;
-        this.clientes = clientes;
-        this.pedidos = pedidos;
+        this.articulos = (articulos != null) ? articulos : new ArrayList<>();
+        this.clientes = (clientes != null) ? clientes : new ArrayList<>();
+        this.pedidos = (pedidos != null) ? pedidos : new ArrayList<>();
     }
 
     //Getters y Setters
