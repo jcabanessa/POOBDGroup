@@ -5,15 +5,21 @@ package poobdgroup.vista;
 
 import poobdgroup.controlador.OnlineStore;
 import poobdgroup.excepciones.TiendaException;
+import poobdgroup.modelo.Articulo;
+import poobdgroup.modelo.ClienteEstandar;
+import poobdgroup.modelo.ClientePremium;
 import poobdgroup.modelo.Datos;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     private OnlineStore controlador;
-    private final Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
 
     public Main() {
+        Datos datos = new Datos(new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         controlador = new OnlineStore();
     }
 
@@ -77,16 +83,39 @@ public class Main {
         }
     }
 
-    void gestionPedidos(){
-        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes de envio\n4. Mostrar Pedidos Enviados\n0. Volver");
+    void gestionPedidos() throws TiendaException {
+        System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes de envío\n4. Mostrar Pedidos Enviados\n0. Volver");
         int op = sc.nextInt();
         sc.nextLine(); // Limpiar buffer
 
         switch (op) {
-            case 1 -> controlador.addPedido();
-            case 2 -> controlador.eliminarPedido();
-            case 3 -> controlador.mostrarPedidosPendientes().tipoCliente();
-            case 4 -> controlador.mostrarPedidosEnviados().tipoCliente();
+            case 1 -> {
+                System.out.print("Número pedido: "); String num = sc.nextLine();
+                System.out.print("Cantidad del artículo: "); int cant = sc.nextInt();
+                System.out.print("Fecha: "); LocalDateTime fec = LocalDateTime.parse(sc.nextLine());
+                System.out.print("Código de Artículo:"); String art = sc.nextLine();
+                System.out.print("Email cliente: "); String mail = sc.nextLine();
+                // Aquí deberías buscar si el cliente existe en el controlador antes de seguir
+
+                controlador.addPedido(num, cant, LocalDateTime.now(), art, mail);
+                System.out.println("Pedido registrado.");
+            }
+            case 2 -> {
+                System.out.print("Número de pedido a eliminar: ");
+                String num = sc.nextLine();
+                if (controlador.eliminarPedido(num)) System.out.println("Eliminado.");
+                else System.out.println("No se pudo eliminar (no existe o ya enviado).");
+            }
+            case 3 -> {
+                System.out.print("Introduce Email del cliente o Todos: ");
+                String emTip = sc.nextLine();
+                controlador.mostrarPedidosPendientes(emTip);
+            }
+            case 4 -> {
+                System.out.print("Introduce Email del cliente o Todos: ");
+                String emTip = sc.nextLine();
+                controlador.mostrarPedidosEnviados(emTip);
+            }
         }
     }
 }

@@ -7,14 +7,16 @@ public class Pedido {
     private String numPedido;
     private int cantidad;
     private LocalDateTime fecha;
-    private Cliente cliente;
     private Articulo articulo;
+    private Cliente cliente;
+
 
     //Constructor
     public Pedido(String numPedido, int cantidad, LocalDateTime fecha) {
         this.numPedido = numPedido;
         this.cantidad = cantidad;
         this.fecha = fecha;
+
     }
 
     //Getters y Setters
@@ -23,6 +25,13 @@ public class Pedido {
     }
     public Cliente getCliente() { return cliente; }
 
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 
     //Métodos
     public float precioEnvio() {
