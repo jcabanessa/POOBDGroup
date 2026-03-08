@@ -38,7 +38,7 @@ public class OnlineStore {
             for (Cliente c : datos.getClientes()) {
                 // Si tipo es "Todos" o coincide con el tipo del cliente, lo muestra
                 if (tipo.equalsIgnoreCase("Todos") || c.tipoCliente().equalsIgnoreCase(tipo)) {
-                    System.out.println(c);
+                    System.out.println(c + " | Tipo:" + c.tipoCliente());
 
                 }
             }
@@ -83,7 +83,7 @@ public class OnlineStore {
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
 
-        Pedido p = new Pedido(numPedido, cantidad, (fecha != null) ? fecha : LocalDateTime.now());
+        Pedido p = new Pedido(numPedido, cantidad, fecha);
 
         p.setArticulo(articulo);
         p.setCliente(cliente);
@@ -110,13 +110,18 @@ public class OnlineStore {
         for (Pedido p : datos.getPedidos()) {
             if (!p.pedidoEnviado() &&
                     (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
-
-                System.out.println(p);
+                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
+                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                }else
+                    System.out.println(p);
                 found = true;
             }
             else if (!p.pedidoEnviado() &&
                     (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
-                System.out.println(p);
+                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
+                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                }else
+                    System.out.println(p);
                 found = true;
             }
         }
@@ -129,13 +134,18 @@ public class OnlineStore {
         for (Pedido p : datos.getPedidos()) {
             if (p.pedidoEnviado() &&
                     (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
-
-                System.out.println(p);
+                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
+                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                }else
+                    System.out.println(p);
                 found = true;
             }
             else if(p.pedidoEnviado() &&
                     (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
-                System.out.println(p);
+                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
+                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                }else
+                    System.out.println(p);
                 found = true;
             }
         }

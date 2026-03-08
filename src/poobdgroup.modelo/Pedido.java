@@ -56,15 +56,9 @@ public class Pedido {
     public String toString() {
         String art = (articulo == null) ? "sin-articulo" : articulo.getCodigo();
         String cli = (cliente == null) ? "sin-cliente" : cliente.getEmail();
-        return "Pedido{" +
-                "numPedido='" + numPedido + '\'' +
-                ", cantidad=" + cantidad +
-                ", fechaHora=" + fecha +
-                ", articulo=" + art +
-                ", cliente=" + cli +
-                ", enviado=" + pedidoEnviado() +
-                ", total=" + calcularPrecioTotal() +
-                '}';
+        String tipo = getCliente().tipoCliente();
+        double gEnvio = precioEnvio();
+        return "Pedido{numPedido='%s', cantidad=%d, fechaHora=%s, articulo=%s, cliente=%s, tipoCliente=%s, enviado=%s, GastosEnvio=%.2f, total=%.2f}".formatted(numPedido, cantidad, fecha, art, cli, tipo, pedidoEnviado(), gEnvio, calcularPrecioTotal());
     }
 }
 
