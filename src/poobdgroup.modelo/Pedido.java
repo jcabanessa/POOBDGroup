@@ -58,7 +58,7 @@ public class Pedido {
         String cli = (cliente == null) ? "sin-cliente" : cliente.getEmail();
         String tipo = getCliente().tipoCliente();
         double gEnvio = precioEnvio();
-        return "Pedido{numPedido='%s', cantidad=%d, fechaHora=%s, articulo=%s, cliente=%s, tipoCliente=%s, enviado=%s, GastosEnvio=%.2f, total=%.2f}".formatted(numPedido, cantidad, fecha, art, cli, tipo, pedidoEnviado(), gEnvio, calcularPrecioTotal());
+        return "Pedido{numPedido='%s', cantidad=%d, fechaHora=%s, articulo=%s, cliente=%s, tipoCliente=%s, enviado=%s, GastosEnvio=%.2f€, total=%.2f€}".formatted(numPedido, cantidad, fecha, art, cli, tipo, pedidoEnviado(), gEnvio, calcularPrecioTotal());
     }
 }
 

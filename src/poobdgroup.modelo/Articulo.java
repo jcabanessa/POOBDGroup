@@ -63,6 +63,6 @@ public class Articulo {
     //toString
     @Override
     public String toString() {
-        return "Articulo{Codigo='%s', Descripcion='%s', Precio de Venta=%.2f, Gastos de Envio=%.2f, Tiempo de Preparacion=%d}".formatted(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
+        return "Articulo{Codigo='%s', Descripcion='%s', Precio de Venta=%.2f€, Gastos de Envio=%.2f€, Tiempo de Preparacion=%d}".formatted(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
     }
 }
