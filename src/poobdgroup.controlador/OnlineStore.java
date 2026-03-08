@@ -111,7 +111,7 @@ public class OnlineStore {
             if (!p.pedidoEnviado() &&
                     (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
@@ -119,7 +119,7 @@ public class OnlineStore {
             else if (!p.pedidoEnviado() &&
                     (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |Cuota Anual Pagada= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
