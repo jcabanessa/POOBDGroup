@@ -9,6 +9,7 @@ import poobdgroup.modelo.Articulo;
 import poobdgroup.modelo.ClienteEstandar;
 import poobdgroup.modelo.ClientePremium;
 import poobdgroup.modelo.Datos;
+import poobdgroup.modelo.Repositorio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class Main {
     DateTimeFormatter df = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd
 
     public Main() {
-        Datos datos = new Datos(new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+        Datos datos = new Datos(new Repositorio<>(),new Repositorio<>(), new Repositorio<>());
         controlador = new OnlineStore();
     }
 
