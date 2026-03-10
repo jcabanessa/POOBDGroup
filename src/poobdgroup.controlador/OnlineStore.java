@@ -24,10 +24,10 @@ public class OnlineStore {
     //Métodos
     public void addCliente(Cliente cli) throws TiendaException {
         if (cli == null) throw new TiendaException("Cliente nulo.");
-        if (datos.getClientes().stream().anyMatch(c -> c.getEmail().equals(cli.getEmail()))) {
+        if (datos.getClientes().containsKey(cli.getEmail())) {
             throw new TiendaException("Error: El email ya está registrado.");
         }
-        datos.getClientes().add(cli);
+        datos.getClientes().put(cli.getEmail(), cli);
     }
 
     public void mostrarClientes(String tipo) throws TiendaException {
@@ -35,7 +35,7 @@ public class OnlineStore {
             throw new TiendaException("Error: No hay clientes registrados en el sistema.");
         } else {
             System.out.println("--- LISTADO DE CLIENTES ---");
-            for (Cliente c : datos.getClientes()) {
+            for (Cliente c : datos.getClientes().values()) {
                 // Si tipo es "Todos" o coincide con el tipo del cliente, lo muestra
                 if (tipo.equalsIgnoreCase("Todos") || c.tipoCliente().equalsIgnoreCase(tipo)) {
                     System.out.println(c + " | Tipo:" + c.tipoCliente());
@@ -78,10 +78,10 @@ public class OnlineStore {
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
 
-        Cliente cliente = datos.getClientes().stream()
-                .filter(c -> c.getEmail().equals(emailCliente))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
+        Cliente cliente = datos.getClientes().get(emailCliente);
+            if (cliente == null) {
+                throw new TiendaException("Cliente no encontrado");
+            }
 
         Pedido p = new Pedido(numPedido, cantidad, fecha);
 
@@ -160,7 +160,7 @@ public class OnlineStore {
     public String toString() {
         return "OnlineStore{" +
                 "articulos=" + datos.getArticulos() +
-                ", clientes=" + datos.getClientes() +
+                ", clientes=" + datos.getClientes().values() +
                 ", pedidos=" + datos.getPedidos() +
                 '}';
     }
