@@ -11,11 +11,10 @@ import poobdgroup.modelo.ClientePremium;
 import poobdgroup.modelo.Datos;
 import poobdgroup.modelo.Repositorio;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
