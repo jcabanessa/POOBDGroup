@@ -20,7 +20,8 @@ tiempoPreparacion int not null
 );
 
 create table if not exists pedido(
-numPedido int auto_increment primary key,
+id int auto_increment primary key,
+numPedido varchar(30) unique not null,
 cantidad int not null,
 fecha datetime not null,
 id_articulo int not null,
@@ -28,3 +29,11 @@ id_cliente int not null,
 foreign key (id_articulo) references articulo(id),
 foreign key (id_cliente) references cliente(id)
 );
+
+show tables;
+
+describe cliente;
+
+describe pedido;
+
+describe articulo;
