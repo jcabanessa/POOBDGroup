@@ -1,0 +1,21 @@
+# CONFIGURACIÓN DE BASE DE DATOS
+# Copia este archivo a config.properties y modifica con tus datos
+
+# Host de MySQL
+db.host=localhost
+
+# Puerto de MySQL
+db.port=3306
+
+# Nombre de la base de datos
+db.name=tienda_online
+
+# Tu usuario de MySQL
+db.user=AQUI_TU_USUARIO
+
+# Tu contraseña de MySQL
+db.password=AQUI_TU_CONTRASEÑA
+
+# Opciones adicionales
+db.useSSL=false
+db.serverTimezone=UTC
