@@ -23,6 +23,14 @@ public abstract class Cliente {
         return email;
     }
 
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
 
     // Métodos abstractos que definen el comportamiento por tipo
     public abstract String tipoCliente();
@@ -39,4 +47,5 @@ public abstract class Cliente {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 }

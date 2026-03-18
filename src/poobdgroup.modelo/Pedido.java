@@ -23,7 +23,21 @@ public class Pedido {
     public String getNumPedido() {
         return numPedido;
     }
-    public Cliente getCliente() { return cliente; }
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public Articulo getArticulo() {
+        return articulo;
+    }
 
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
@@ -32,6 +46,19 @@ public class Pedido {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setNumPedido(String numPedido) {
+        this.numPedido = numPedido;
+    }
+
 
     //Métodos
     public double precioEnvio() {
