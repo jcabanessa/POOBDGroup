@@ -24,7 +24,7 @@ public class OnlineStore {
     //Métodos
     public void addCliente(Cliente cli) throws TiendaException {
         if (cli == null) throw new TiendaException("Cliente nulo.");
-        if (datos.getClientes().stream().anyMatch(c -> c.getEmail().equals(cli.getEmail()))) {
+        if (datos.getClientes().getAll().stream().anyMatch(c -> c.getEmail().equals(cli.getEmail()))) {
             throw new TiendaException("Error: El email ya está registrado.");
         }
         datos.getClientes().add(cli);
@@ -46,7 +46,7 @@ public class OnlineStore {
     }
     public void addArticulo (Articulo art) throws TiendaException {
         if (art == null) throw new TiendaException("Artículo nulo.");
-        if (datos.getArticulos().stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
+        if (datos.getArticulos().getAll().stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
             throw new TiendaException("Error: Ya existe un artículo con ese código.");
         }
         datos.getArticulos().add(art);
@@ -69,16 +69,16 @@ public class OnlineStore {
                            String codArticulo,
                            String emailCliente) throws TiendaException {
         if (numPedido == null || codArticulo == null || emailCliente == null) throw new TiendaException("Parámetros inválidos.");
-        if (datos.getPedidos().stream()
+        if (datos.getPedidos().getAll().stream()
                 .anyMatch(p -> p.getNumPedido().equals(numPedido)))
             throw new TiendaException("El pedido ya existe");
 
-        Articulo articulo = datos.getArticulos().stream()
+        Articulo articulo = datos.getArticulos().getAll().stream()
                 .filter(a -> a.getCodigo().equals(codArticulo))
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
 
-        Cliente cliente = datos.getClientes().stream()
+        Cliente cliente = datos.getClientes().getAll().stream()
                 .filter(c -> c.getEmail().equals(emailCliente))
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
@@ -93,7 +93,7 @@ public class OnlineStore {
     }
 
     public boolean eliminarPedido (String numPedido) throws TiendaException {
-        Pedido p = datos.getPedidos().stream()
+        Pedido p = datos.getPedidos().getAll().stream()
                 .filter(pedido -> pedido.getNumPedido().equals(numPedido))
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Error: El pedido no existe."));
@@ -111,7 +111,7 @@ public class OnlineStore {
             if (!p.pedidoEnviado() &&
                     (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
@@ -119,7 +119,7 @@ public class OnlineStore {
             else if (!p.pedidoEnviado() &&
                     (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
@@ -135,7 +135,7 @@ public class OnlineStore {
             if (p.pedidoEnviado() &&
                     (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
@@ -143,7 +143,7 @@ public class OnlineStore {
             else if(p.pedidoEnviado() &&
                     (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
                 if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
+                    System.out.println(p + " |CuotaAnual descuento 20% en envíos= " + p.getCliente().calcAnual());
                 }else
                     System.out.println(p);
                 found = true;
