@@ -1,0 +1,17 @@
+package poobdgroup.DAO;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConexionDB {
+
+    // Ajusta la contraseña a la que configuraste antes en la terminal
+    private static final String URL = "jdbc:mysql://localhost:3306/tienda_online?useSSL=false&serverTimezone=UTC";
+    private static final String USUARIO = "root";
+    private static final String PASSWORD = "Frontkick1987.";
+
+    public static Connection obtenerConexion() throws SQLException {
+        return DriverManager.getConnection(URL, USUARIO, PASSWORD);
+    }
+}

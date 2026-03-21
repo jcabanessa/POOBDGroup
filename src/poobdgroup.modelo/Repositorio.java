@@ -35,4 +35,7 @@ public class Repositorio<T> implements Iterable<T>{
     public Iterator<T> iterator() {
         return elementos.iterator();
     }
+
+    public void addAll(ArrayList<T> articulos) {
+    }
 }

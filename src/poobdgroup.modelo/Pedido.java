@@ -25,6 +25,18 @@ public class Pedido {
     }
     public Cliente getCliente() { return cliente; }
 
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public Articulo getArticulo() {
+        return articulo;
+    }
+
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
     }
