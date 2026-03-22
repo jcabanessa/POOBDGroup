@@ -4,6 +4,7 @@ package poobdgroup.modelo;
 import java.time.LocalDateTime;
 
 public class Pedido {
+    private int id;
     private String numPedido;
     private int cantidad;
     private LocalDateTime fecha;

@@ -1,6 +1,7 @@
 package poobdgroup.modelo;
 
 public class Articulo {
+    private int id;
     private String codigo;
     private String descripcion;
     private double precioVenta;
@@ -17,6 +18,11 @@ public class Articulo {
     }
 
     //Getters y Setters
+
+    public int getId() {
+        return id;
+    }
+
     public String getCodigo() {
         return codigo;
     }

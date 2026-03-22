@@ -3,10 +3,12 @@ package poobdgroup.vista;
 
 // [MermaidChart: 05d3e7bd-4e9f-42f9-b47c-a7cc5e8fc8cf]
 import poobdgroup.controlador.OnlineStore;
+import poobdgroup.excepciones.TiendaException;
 import poobdgroup.modelo.Datos;
 import poobdgroup.modelo.Repositorio;
 
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Scanner;
@@ -50,15 +52,15 @@ public class Main {
                 switch (opcion) {
 
                     case 1:
-                        controlador.gestionArticulos();
+                        gestionArticulos();
                         break;
 
                     case 2:
-                        controlador.gestionClientes();
+                        gestionClientes();
                         break;
 
                     case 3:
-                        controlador.gestionPedidos();
+                        gestionPedidos();
                         break;
 
                     case 0:
@@ -76,7 +78,7 @@ public class Main {
         }
     }
 
-    /*void gestionArticulos() {
+    void gestionArticulos() {
         int op = -1;
         while (op != 0) {
 
@@ -97,7 +99,7 @@ public class Main {
                         double env = Double.parseDouble(sc.nextLine());
                         System.out.print("Tiempo preparación (min): ");
                         int t = parseInt(sc.nextLine());
-                        controlador.addArticulo(new Articulo(cod, des, pre, env, t));
+                        controlador.crearArticulo(cod, des, pre, env, t);
                         System.out.println("Artículo añadido");
                         break;
                     case 2:
@@ -135,10 +137,8 @@ public class Main {
                         System.out.print("Email: ");
                         String em = sc.nextLine();
                         System.out.print("¿Es Premium? (s/n): ");
-                        if (sc.nextLine().equalsIgnoreCase("s"))
-                            controlador.addCliente(new ClientePremium(nom, dom, nif, em));
-                        else
-                            controlador.addCliente(new ClienteEstandar(nom, dom, nif, em));
+                        boolean premium = sc.nextLine().equalsIgnoreCase("s");
+                        controlador.crearCliente(nom, dom, nif, em, premium);
 
                         System.out.println("Cliente añadido");
                         break;
@@ -183,8 +183,47 @@ public class Main {
                         String art = sc.nextLine();
                         System.out.print("Email cliente: ");
                         String mail = sc.nextLine();
-                        controlador.addPedido(num, cant, fecha, art, mail);
-                        System.out.println("Pedido registrado.");
+                        try {
+                            controlador.crearPedido(num, cant, art, mail);
+                            System.out.println("✔ Pedido creado");
+
+                        } catch (TiendaException e) {
+
+                            // CASO IMPORTANTE
+                            if (e.getMessage().equals("CLIENTE_NO_EXISTE")) {
+
+                                System.out.println("Cliente no existe. Vamos a crearlo.");
+
+                                // Pedir datos del cliente
+                                System.out.print("Nombre: ");
+                                String nom = sc.nextLine();
+
+                                System.out.print("Domicilio: ");
+                                String dom = sc.nextLine();
+
+                                System.out.print("NIF: ");
+                                String nif = sc.nextLine();
+
+                                System.out.print("¿Premium? (s/n): ");
+                                boolean premium = sc.nextLine().equalsIgnoreCase("s");
+
+                                try {
+                                    // Crear cliente
+                                    controlador.crearCliente(nom, dom, nif, mail, premium);
+
+                                    // Reintentar pedido
+                                    controlador.crearPedido(num, cant, art, mail);
+
+                                    System.out.println("Cliente creado y pedido registrado");
+
+                                } catch (Exception ex) {
+                                    System.out.println("Error: " + ex.getMessage());
+                                }
+
+                            } else {
+                                System.out.println("Error: " + e.getMessage());
+                            }
+                        }
                     }
                     case 2 -> {
                         System.out.print("Número de pedido a eliminar: ");
@@ -207,5 +246,5 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-    }*/
+    }
 }

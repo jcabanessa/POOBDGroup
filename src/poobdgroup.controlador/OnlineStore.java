@@ -216,6 +216,7 @@ public class OnlineStore {
                 .findFirst()
                 .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
 
+
         Pedido p = new Pedido(numPedido, cantidad, fecha);
         p.setArticulo(articulo);
         p.setCliente(cliente);
@@ -230,6 +231,11 @@ public class OnlineStore {
         } catch (java.sql.SQLException e) {
             throw new TiendaException("Error al guardar el pedido en la base de datos: " + e.getMessage());
         }
+    }
+
+    public boolean existeCliente(String email) {
+        return datos.getClientes().getAll().stream()
+                .anyMatch(c -> c.getEmail().equalsIgnoreCase(email));
     }
 
     /*public boolean eliminarPedido (String numPedido) throws TiendaException {
@@ -314,7 +320,32 @@ public class OnlineStore {
         if (!found) throw new TiendaException("Error: No hay pedidos enviados");
     }
 
-    //Las 3 funciones de Main gestionClientes(), gestionPedidos() y gestionArticulos las pasamos al controlador
+    public void crearArticulo(String cod, String des, double pre, double env, int t) throws TiendaException {
+        addArticulo(new Articulo(cod, des, pre, env, t));
+    }
+
+    public void crearCliente(String nom, String dom, String nif, String email, boolean premium) throws TiendaException {
+
+        Cliente c;
+
+        if (premium) {
+            c = new ClientePremium(nom, dom, nif, email);
+        } else {
+            c = new ClienteEstandar(nom, dom, nif, email);
+        }
+
+        addCliente(c);
+    }
+
+    public void crearPedido(String num, int cant, String codArt, String email) throws TiendaException {
+
+        LocalDateTime fecha = LocalDateTime.now();
+
+        addPedido(num, cant, fecha, codArt, email);
+    }
+
+
+    /*//Las 3 funciones de Main gestionClientes(), gestionPedidos() y gestionArticulos las pasamos al controlador
     public void gestionArticulos() {
         int op = -1;
         while (op != 0) {
@@ -355,6 +386,9 @@ public class OnlineStore {
         }
 
     }
+
+
+
 
     public void gestionClientes() throws TiendaException {
         int op = -1;
@@ -446,7 +480,7 @@ public class OnlineStore {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-    }
+    }*/
 
     //toString
 

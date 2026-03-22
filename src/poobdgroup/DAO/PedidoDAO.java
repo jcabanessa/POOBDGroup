@@ -14,7 +14,7 @@ public class PedidoDAO {
 
     // Método para GUARDAR
     public void guardarPedido(Pedido pedido) throws SQLException {
-        String sql = "INSERT INTO pedido (num_pedido, cantidad, fecha, articulo_codigo, cliente_email) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pedido (numPedido, cantidad, fecha, id_articulo, id_cliente) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConexionDB.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -26,8 +26,8 @@ public class PedidoDAO {
             pstmt.setTimestamp(3, Timestamp.valueOf(pedido.getFecha()));
 
             // Sacamos el ID directamente de los objetos que están dentro del pedido
-            pstmt.setString(4, pedido.getArticulo().getCodigo());
-            pstmt.setString(5, pedido.getCliente().getEmail());
+            pstmt.setInt(4, pedido.getArticulo().getId());
+            pstmt.setInt(5, pedido.getCliente().getId());
 
             pstmt.executeUpdate();
         }
@@ -35,7 +35,7 @@ public class PedidoDAO {
 
     // Método para ELIMINAR
     public void eliminarPedido(String numPedido) throws SQLException {
-        String sql = "DELETE FROM pedido WHERE num_pedido = ?";
+        String sql = "DELETE FROM pedido WHERE numPedido = ?";
 
         try (Connection conn = ConexionDB.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -57,23 +57,23 @@ public class PedidoDAO {
              java.sql.ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String numPedido = rs.getString("num_pedido");
+                String numPedido = rs.getString("numPedido");
                 int cantidad = rs.getInt("cantidad");
 
                 // Convertimos el Timestamp de SQL de vuelta a LocalDateTime de Java
                 java.time.LocalDateTime fecha = rs.getTimestamp("fecha").toLocalDateTime();
 
-                String codArticulo = rs.getString("articulo_codigo");
-                String emailCliente = rs.getString("cliente_email");
+                String codArticulo = rs.getString("id_articulo");
+                String emailCliente = rs.getString("id_cliente");
 
                 poobdgroup.modelo.Pedido pedido = new poobdgroup.modelo.Pedido(numPedido, cantidad, fecha);
 
                 // Buscamos el artículo y el cliente correspondientes usando Streams
-                poobdgroup.modelo.Articulo art = catalogoArticulos.stream()
+                poobdgroup.modelo.Articulo art = catalogoArticulos.getAll().stream()
                         .filter(a -> a.getCodigo().equals(codArticulo))
                         .findFirst().orElse(null);
 
-                poobdgroup.modelo.Cliente cli = listaClientes.stream()
+                poobdgroup.modelo.Cliente cli = listaClientes.getAll().stream()
                         .filter(c -> c.getEmail().equals(emailCliente))
                         .findFirst().orElse(null);
 

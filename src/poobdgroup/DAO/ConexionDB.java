@@ -9,7 +9,7 @@ public class ConexionDB {
     // Ajusta la contraseña a la que configuraste antes en la terminal
     private static final String URL = "jdbc:mysql://localhost:3306/tienda_online?useSSL=false&serverTimezone=UTC";
     private static final String USUARIO = "root";
-    private static final String PASSWORD = "Frontkick1987.";
+    private static final String PASSWORD = "Adm1234";
 
     public static Connection obtenerConexion() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, PASSWORD);

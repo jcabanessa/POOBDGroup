@@ -1,6 +1,7 @@
 package poobdgroup.modelo;
 
 public abstract class Cliente {
+    private int id;
     private String nombre;
     private String domicilio;
     private String nif;
@@ -15,6 +16,11 @@ public abstract class Cliente {
     }
 
     //Getters y Setters
+
+    public int getId() {
+        return id;
+    }
+
     public String getNombre() {
         return nombre;
     }

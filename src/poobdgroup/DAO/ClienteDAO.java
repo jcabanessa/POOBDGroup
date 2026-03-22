@@ -14,15 +14,16 @@ public class ClienteDAO {
 
     // Método para GUARDAR
     public void guardarCliente(Cliente cliente) throws SQLException {
-        String sql = "INSERT INTO cliente (email, nombre, domicilio, nif, tipo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cliente (nombre, domicilio, nif, email, tipo) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConexionDB.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, cliente.getEmail());
-            pstmt.setString(2, cliente.getNombre());
-            pstmt.setString(3, cliente.getDomicilio());
-            pstmt.setString(4, cliente.getNif());
+
+            pstmt.setString(1, cliente.getNombre());
+            pstmt.setString(2, cliente.getDomicilio());
+            pstmt.setString(3, cliente.getNif());
+            pstmt.setString(4, cliente.getEmail());
             pstmt.setString(5, cliente.tipoCliente()); // Aquí guardamos 'Estandar' o 'Premium'
 
             pstmt.executeUpdate();
@@ -39,10 +40,10 @@ public class ClienteDAO {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String email = rs.getString("email");
                 String nombre = rs.getString("nombre");
                 String domicilio = rs.getString("domicilio");
                 String nif = rs.getString("nif");
+                String email = rs.getString("email");
                 String tipo = rs.getString("tipo");
 
                 // El "truco": instanciamos la clase correcta según lo que diga la base de datos

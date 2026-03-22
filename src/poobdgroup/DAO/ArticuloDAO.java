@@ -11,7 +11,7 @@ public class ArticuloDAO {
 
     public void guardarArticulo(Articulo articulo) throws SQLException {
         // La consulta SQL con signos de interrogación para evitar inyecciones SQL
-        String sql = "INSERT INTO articulo (codigo, descripcion, precio_venta, gastos_envio, tiempo_preparacion) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO articulo (codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion) VALUES (?, ?, ?, ?, ?)";
 
         // El bloque try-with-resources cierra la conexión automáticamente al terminar
         try (Connection conn = ConexionDB.obtenerConexion();
@@ -47,9 +47,9 @@ public class ArticuloDAO {
                 Articulo articulo = new Articulo(
                         rs.getString("codigo"),
                         rs.getString("descripcion"),
-                        rs.getDouble("precio_venta"),
-                        rs.getDouble("gastos_envio"),
-                        rs.getInt("tiempo_preparacion")
+                        rs.getDouble("precioVenta"),
+                        rs.getDouble("gastosEnvio"),
+                        rs.getInt("tiempoPreparacion")
                 );
                 listaArticulos.add(articulo);
             }
