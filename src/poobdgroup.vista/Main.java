@@ -2,17 +2,11 @@ package poobdgroup.vista;
 
 
 // [MermaidChart: 05d3e7bd-4e9f-42f9-b47c-a7cc5e8fc8cf]
-
 import poobdgroup.controlador.OnlineStore;
-import poobdgroup.excepciones.TiendaException;
-import poobdgroup.modelo.Articulo;
-import poobdgroup.modelo.ClienteEstandar;
-import poobdgroup.modelo.ClientePremium;
 import poobdgroup.modelo.Datos;
 import poobdgroup.modelo.Repositorio;
 
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Scanner;
@@ -56,15 +50,15 @@ public class Main {
                 switch (opcion) {
 
                     case 1:
-                        gestionArticulos();
+                        controlador.gestionArticulos();
                         break;
 
                     case 2:
-                        gestionClientes();
+                        controlador.gestionClientes();
                         break;
 
                     case 3:
-                        gestionPedidos();
+                        controlador.gestionPedidos();
                         break;
 
                     case 0:
@@ -82,7 +76,7 @@ public class Main {
         }
     }
 
-    void gestionArticulos() {
+    /*void gestionArticulos() {
         int op = -1;
         while (op != 0) {
 
@@ -213,5 +207,5 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-    }
+    }*/
 }
