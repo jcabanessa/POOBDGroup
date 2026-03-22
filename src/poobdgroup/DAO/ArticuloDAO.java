@@ -11,21 +11,21 @@ public class ArticuloDAO {
 
     public void guardarArticulo(Articulo articulo) throws SQLException {
         // La consulta SQL con signos de interrogación para evitar inyecciones SQL
-        String sql = "INSERT INTO articulo (codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion) VALUES (?, ?, ?, ?, ?)";
+        String sql = "{CALL insertar_articulo(?, ?, ?, ?, ?)}";
 
         // El bloque try-with-resources cierra la conexión automáticamente al terminar
         try (Connection conn = ConexionDB.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             java.sql.CallableStatement cs = conn.prepareCall(sql)) {
 
             // Sustituimos los '?' por los datos reales del objeto Articulo
-            pstmt.setString(1, articulo.getCodigo());
-            pstmt.setString(2, articulo.getDescripcion());
-            pstmt.setDouble(3, articulo.getPrecioVenta());
-            pstmt.setDouble(4, articulo.getGastosEnvio());
-            pstmt.setInt(5, articulo.getTiempoPreparacion());
+            cs.setString(1, articulo.getCodigo());
+            cs.setString(2, articulo.getDescripcion());
+            cs.setDouble(3, articulo.getPrecioVenta());
+            cs.setDouble(4, articulo.getGastosEnvio());
+            cs.setInt(5, articulo.getTiempoPreparacion());
 
             // Ejecutamos la orden en la base de datos
-            pstmt.executeUpdate();
+            cs.executeUpdate();
             System.out.println("Artículo guardado correctamente en la base de datos.");
         }
     }

@@ -14,19 +14,19 @@ public class ClienteDAO {
 
     // Método para GUARDAR
     public void guardarCliente(Cliente cliente) throws SQLException {
-        String sql = "INSERT INTO cliente (nombre, domicilio, nif, email, tipo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "{CALL insertar_cliente(?, ?, ?, ?, ?)}";
 
         try (Connection conn = ConexionDB.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             java.sql.CallableStatement cs = conn.prepareCall(sql)) {
 
 
-            pstmt.setString(1, cliente.getNombre());
-            pstmt.setString(2, cliente.getDomicilio());
-            pstmt.setString(3, cliente.getNif());
-            pstmt.setString(4, cliente.getEmail());
-            pstmt.setString(5, cliente.tipoCliente()); // Aquí guardamos 'Estandar' o 'Premium'
+            cs.setString(1, cliente.getNombre());
+            cs.setString(2, cliente.getDomicilio());
+            cs.setString(3, cliente.getNif());
+            cs.setString(4, cliente.getEmail());
+            cs.setString(5, cliente.tipoCliente()); // Aquí guardamos 'Estandar' o 'Premium'
 
-            pstmt.executeUpdate();
+            cs.executeUpdate();
         }
     }
 
