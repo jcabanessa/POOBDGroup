@@ -5,6 +5,7 @@ import poobdgroup.modelo.*;
 import poobdgroup.DAO.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
@@ -172,36 +173,71 @@ public class OnlineStore {
         }
     }
 
-    /*public void addPedido (String numPedido,
-                           int cantidad,
-                           LocalDateTime fecha,
-                           String codArticulo,
-                           String emailCliente) throws TiendaException {
-        if (numPedido == null || codArticulo == null || emailCliente == null) throw new TiendaException("Parámetros inválidos.");
-        if (datos.getPedidos().stream()
+    public void addPedido(String numPedido, int cantidad, LocalDateTime fecha,
+                          String codArticulo, String emailCliente) throws TiendaException {
+
+        if (numPedido == null || numPedido.isBlank() ||
+                codArticulo == null || codArticulo.isBlank())
+            throw new TiendaException("Parámetros inválidos.");
+
+        if (emailCliente == null || emailCliente.isBlank()) {
+            throw new TiendaException("CLIENTE_NO_EXISTE");
+        }
+
+        if (datos.getPedidos().getAll().stream()
                 .anyMatch(p -> p.getNumPedido().equals(numPedido)))
             throw new TiendaException("El pedido ya existe");
 
-        Articulo articulo = datos.getArticulos().stream()
-                .filter(a -> a.getCodigo().equals(codArticulo))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
+        try {
+            // 🔹 ARTICULO (memoria → BD)
+            Articulo articulo = datos.getArticulos().getAll().stream()
+                    .filter(a -> a.getCodigo().equalsIgnoreCase(codArticulo))
+                    .findFirst()
+                    .orElse(null);
 
-        Cliente cliente = datos.getClientes().stream()
-                .filter(c -> c.getEmail().equals(emailCliente))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
+            if (articulo == null) {
+                articulo = articuloDAO.obtenerArticulos().stream()
+                        .filter(a -> a.getCodigo().equalsIgnoreCase(codArticulo))
+                        .findFirst()
+                        .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
+            }
 
-        Pedido p = new Pedido(numPedido, cantidad, fecha);
+            // 🔹 CLIENTE (IMPORTANTE)
+            Cliente cliente = datos.getClientes().getAll().stream()
+                    .filter(c -> c.getEmail().equalsIgnoreCase(emailCliente))
+                    .findFirst()
+                    .orElse(null);
 
-        p.setArticulo(articulo);
-        p.setCliente(cliente);
+            if (cliente == null) {
+                cliente = clienteDAO.obtenerClientes().stream()
+                        .filter(c -> c.getEmail().equalsIgnoreCase(emailCliente))
+                        .findFirst()
+                        .orElse(null);
+            }
 
-        datos.getPedidos().add(p);
+            // 🔥 SI NO EXISTE → LANZAR EXCEPCIÓN (NO CREAR)
+            if (cliente == null) {
+                throw new TiendaException("CLIENTE_NO_EXISTE");
+            }
 
-    }*/
+            // 🔹 CREAR PEDIDO
+            Pedido p = new Pedido(numPedido, cantidad, fecha);
+            p.setArticulo(articulo);
+            p.setCliente(cliente);
+            p.setEnviado(false); // MUY IMPORTANTE
 
-    public void addPedido(String numPedido, int cantidad, LocalDateTime fecha, String codArticulo, String emailCliente) throws TiendaException {
+            // 🔹 GUARDAR EN BD
+            pedidoDAO.guardarPedido(p);
+
+            // 🔹 GUARDAR EN MEMORIA
+            datos.getPedidos().add(p);
+
+        } catch (java.sql.SQLException e) {
+            throw new TiendaException("Error al guardar el pedido: " + e.getMessage());
+        }
+    }
+
+    /*public void addPedido(String numPedido, int cantidad, LocalDateTime fecha, String codArticulo, String emailCliente) throws TiendaException {
         if (numPedido == null || codArticulo == null || emailCliente == null) throw new TiendaException("Parámetros inválidos.");
         if (datos.getPedidos().getAll().stream().anyMatch(p -> p.getNumPedido().equals(numPedido)))
             throw new TiendaException("El pedido ya existe");
@@ -214,7 +250,7 @@ public class OnlineStore {
         Cliente cliente = datos.getClientes().getAll().stream()
                 .filter(c -> c.getEmail().equals(emailCliente))
                 .findFirst()
-                .orElseThrow(() -> new TiendaException("Cliente no encontrado"));
+                .orElseThrow(() -> new TiendaException("CLIENTE_NO_EXISTE"));
 
 
         Pedido p = new Pedido(numPedido, cantidad, fecha);
@@ -231,7 +267,7 @@ public class OnlineStore {
         } catch (java.sql.SQLException e) {
             throw new TiendaException("Error al guardar el pedido en la base de datos: " + e.getMessage());
         }
-    }
+    }*/
 
     public boolean existeCliente(String email) {
         return datos.getClientes().getAll().stream()
@@ -272,6 +308,32 @@ public class OnlineStore {
         }
     }
 
+    /*public void mostrarPedidosPendientes(String filtro) throws TiendaException {
+        System.out.println("=== PEDIDOS PENDIENTES ===");
+
+        boolean found = false;
+
+        try {
+            ArrayList<Pedido> lista = pedidoDAO.obtenerPedidos(datos.getArticulos(),
+                    datos.getClientes());
+
+            for (Pedido p : lista) {
+
+                if (!p.pedidoEnviado() && coincideFiltro(p, filtro)) {
+
+                    imprimirPedido(p);
+                    found = true;
+                }
+            }
+
+        } catch (Exception e) {
+            throw new TiendaException("Error al consultar pedidos: " + e.getMessage());
+        }
+
+        if (!found)
+            throw new TiendaException("No hay pedidos pendientes.");
+    }*/
+
     public void mostrarPedidosPendientes (String mailOTipo) throws TiendaException {
         System.out.println("=== PEDIDOS PENDIENTES ===");
         boolean found = false;
@@ -296,7 +358,7 @@ public class OnlineStore {
         if (!found) throw new TiendaException("Error: No hay pedidos pendientes.");
     }
 
-    public void mostrarPedidosEnviados (String mailOTipo) throws TiendaException {
+    /*public void mostrarPedidosEnviados (String mailOTipo) throws TiendaException {
         System.out.println("=== PEDIDOS ENVIADOS ===");
         boolean found = false;
         for (Pedido p : datos.getPedidos()) {
@@ -318,6 +380,73 @@ public class OnlineStore {
             }
         }
         if (!found) throw new TiendaException("Error: No hay pedidos enviados");
+    }*/
+
+    public void mostrarPedidosEnviados(String filtro) throws TiendaException {
+        System.out.println("=== PEDIDOS ENVIADOS ===");
+
+        for (Pedido p : datos.getPedidos()) {
+
+            int minutos = p.getArticulo().getTiempoPreparacion();
+
+            if (!p.pedidoEnviado() &&
+                    p.getFecha().plusMinutes(minutos).isBefore(LocalDateTime.now())) {
+
+                p.setEnviado(true);
+
+                try {
+                    pedidoDAO.enviarPedido(p.getNumPedido());
+                } catch (Exception ignored) {}
+            }
+        }
+        boolean found = false;
+
+        try {
+            ArrayList<Pedido> lista = pedidoDAO.obtenerPedidos(datos.getArticulos(),
+                    datos.getClientes());
+
+            for (Pedido p : lista) {
+
+                if (p.pedidoEnviado() && coincideFiltro(p, filtro)) {
+
+                    imprimirPedido(p);
+                    found = true;
+                }
+            }
+
+        } catch (Exception e) {
+            throw new TiendaException("Error al consultar pedidos: " + e.getMessage());
+        }
+
+        if (!found)
+            throw new TiendaException("No hay pedidos enviados.");
+    }
+
+    private boolean coincideFiltro(Pedido p, String filtro) {
+
+        if (filtro == null || filtro.isBlank())
+            return true;
+
+        if (filtro.equalsIgnoreCase("todos"))
+            return true;
+
+        if (p.getCliente().getEmail().equalsIgnoreCase(filtro))
+            return true;
+
+        return p.getCliente().tipoCliente().equalsIgnoreCase(filtro);
+    }
+
+    private void imprimirPedido(Pedido p) {
+
+        if (p.getCliente().tipoCliente().equalsIgnoreCase("Premium")) {
+
+            System.out.println(p +
+                    " | Cuota anual (desc 20% envío): " +
+                    p.getCliente().calcAnual());
+
+        } else {
+            System.out.println(p);
+        }
     }
 
     public void crearArticulo(String cod, String des, double pre, double env, int t) throws TiendaException {
@@ -344,143 +473,6 @@ public class OnlineStore {
         addPedido(num, cant, fecha, codArt, email);
     }
 
-
-    /*//Las 3 funciones de Main gestionClientes(), gestionPedidos() y gestionArticulos las pasamos al controlador
-    public void gestionArticulos() {
-        int op = -1;
-        while (op != 0) {
-
-            try {
-                System.out.println("\n1. Añadir Artículo\n2. Mostrar Todos los Artículos\n0. Volver\nOpción: ");
-                op = parseInt(sc.nextLine());
-
-
-                switch (op) {
-                    case 1:
-                        System.out.print("Código: ");
-                        String cod = sc.nextLine();
-                        System.out.print("Descripción: ");
-                        String des = sc.nextLine();
-                        System.out.print("Precio: ");
-                        double pre = Double.parseDouble(sc.nextLine());
-                        System.out.print("Gastos de Envío: ");
-                        double env = Double.parseDouble(sc.nextLine());
-                        System.out.print("Tiempo preparación (min): ");
-                        int t = parseInt(sc.nextLine());
-                        addArticulo(new Articulo(cod, des, pre, env, t));
-                        System.out.println("Artículo añadido");
-                        break;
-                    case 2:
-                        mostrarArticulos();
-                        break;
-                    case 0:
-                        System.out.println("Volviendo");
-                        break;
-                    default:
-                        System.out.println("Opción incorrecta");
-                }
-
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-
-    }
-
-
-
-
-    public void gestionClientes() throws TiendaException {
-        int op = -1;
-        while(op != 0) {
-            try {
-                System.out.println("\n1. Añadir Cliente\n2. Mostrar Todos los Clientes\n3. Mostrar Clientes Estandar\n4. Mostrar Clientes Premium\n0. Volver\nOpción: ");
-                op = parseInt(sc.nextLine());
-
-                switch (op) {
-                    case 1:
-                        System.out.print("Nombre: ");
-                        String nom = sc.nextLine();
-                        System.out.print("Domicilio: ");
-                        String dom = sc.nextLine();
-                        System.out.print("NIF: ");
-                        String nif = sc.nextLine();
-                        System.out.print("Email: ");
-                        String em = sc.nextLine();
-                        System.out.print("¿Es Premium? (s/n): ");
-                        if (sc.nextLine().equalsIgnoreCase("s"))
-                            addCliente(new ClientePremium(nom, dom, nif, em));
-                        else
-                            addCliente(new ClienteEstandar(nom, dom, nif, em));
-
-                        System.out.println("Cliente añadido");
-                        break;
-                    case 2:
-                        mostrarClientes("Todos");
-                        break;
-                    case 3:
-                        mostrarClientes("Estandar");
-                        break;
-                    case 4:
-                        mostrarClientes("Premium");
-                        break;
-                    case 0:
-                        System.out.println("Volviendo");
-                        break;
-                    default:
-                        System.out.println("Opción incorrecta");
-                }
-            }catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-    }
-
-    public void gestionPedidos() throws TiendaException {
-        int op = -1;
-        while(op != 0) {
-            try {
-                System.out.println("\n1. Añadir Pedido\n2. Eliminar Pedido\n3. Mostrar Pedidos Pendientes (filtrar por emailCliente/Todos)\n4. Mostrar Pedidos Enviados (filtrar por emailCliente/Todos)\n0. Volver\nOpción: ");
-                op = parseInt(sc.nextLine());
-
-                switch (op) {
-                    case 1 -> {
-                        System.out.print("Número pedido: ");
-                        String num = sc.nextLine();
-                        System.out.print("Cantidad del artículo: ");
-                        int cant = parseInt(sc.nextLine());
-                        System.out.print("Fecha y hora de creación: ");
-                        LocalDateTime fecha = LocalDateTime.now();
-                        System.out.println(fecha);
-                        System.out.print("Código de Artículo:");
-                        String art = sc.nextLine();
-                        System.out.print("Email cliente: ");
-                        String mail = sc.nextLine();
-                        addPedido(num, cant, fecha, art, mail);
-                        System.out.println("Pedido registrado.");
-                    }
-                    case 2 -> {
-                        System.out.print("Número de pedido a eliminar: ");
-                        String num = sc.nextLine();
-                        if (eliminarPedido(num)) System.out.println("Eliminado.");
-                        else throw new TiendaException("Erro: No se pudo eliminar (no existe o ya enviado).");
-                    }
-                    case 3 -> {
-                        System.out.print("Introduce Email del cliente o Todos: ");
-                        String emTip = sc.nextLine();
-                        mostrarPedidosPendientes(emTip);
-                    }
-                    case 4 -> {
-                        System.out.print("Introduce Email del cliente o Todos: ");
-                        String emTip = sc.nextLine();
-                        mostrarPedidosEnviados(emTip);
-                    }
-                }
-            }catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-    }*/
 
     //toString
 

@@ -1,15 +1,12 @@
 package poobdgroup.DAO;
 
-import poobdgroup.modelo.Articulo;
-import poobdgroup.modelo.Cliente;
-import poobdgroup.modelo.Pedido;
-import poobdgroup.modelo.Repositorio;
+import poobdgroup.modelo.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class PedidoDAO {
 
@@ -46,12 +43,20 @@ public class PedidoDAO {
         }
     }
 
-    public java.util.ArrayList<poobdgroup.modelo.Pedido> obtenerPedidos(
+    public ArrayList<Pedido> obtenerPedidos(
             Repositorio<Articulo> catalogoArticulos,
             Repositorio<Cliente> listaClientes) throws SQLException {
 
-        java.util.ArrayList<poobdgroup.modelo.Pedido> listaPedidos = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM pedido";
+        ArrayList<Pedido> listaPedidos = new java.util.ArrayList<>();
+
+        String sql = """
+        SELECT p.*, a.codigo, a.descripcion, a.precioVenta, a.gastosEnvio, a.tiempoPreparacion,
+               c.nombre, c.domicilio, c.nif, c.email, c.tipo
+        FROM pedido p
+        JOIN articulo a ON p.id_articulo = a.id
+        JOIN cliente c ON p.id_cliente = c.id
+    """;
+        //String sql = "SELECT * FROM pedido";
 
         try (Connection conn = ConexionDB.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -67,23 +72,75 @@ public class PedidoDAO {
                 int codArticulo = rs.getInt("id_articulo");
                 int emailCliente = rs.getInt("id_cliente");
 
-                poobdgroup.modelo.Pedido pedido = new poobdgroup.modelo.Pedido(numPedido, cantidad, fecha);
+                Pedido pedido = new Pedido(numPedido, cantidad, fecha);
 
-                // Buscamos el artículo y el cliente correspondientes usando Streams
+                /*// Buscamos el artículo y el cliente correspondientes usando Streams
                 poobdgroup.modelo.Articulo art = catalogoArticulos.getAll().stream()
                         .filter(a -> a.getId() == codArticulo)
                         .findFirst().orElse(null);
 
                 poobdgroup.modelo.Cliente cli = listaClientes.getAll().stream()
                         .filter(c -> c.getId() == emailCliente)
-                        .findFirst().orElse(null);
+                        .findFirst().orElse(null);*/
+                Articulo art = new Articulo(
+                        rs.getString("codigo"),
+                        rs.getString("descripcion"),
+                        rs.getDouble("precioVenta"),
+                        rs.getDouble("gastosEnvio"),
+                        rs.getInt("tiempoPreparacion")
+                );
+                art.setId(rs.getInt("id_articulo"));
+
+                Cliente cli;
+                if ("Premium".equalsIgnoreCase(rs.getString("tipo"))) {
+                    cli = new ClientePremium(
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            rs.getString("email")
+                    );
+                } else {
+                    cli = new ClienteEstandar(
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            rs.getString("email")
+                    );
+                }
+                cli.setId(rs.getInt("id_cliente"));
+
 
                 pedido.setArticulo(art);
                 pedido.setCliente(cli);
+                pedido.setEnviado(rs.getBoolean("enviado"));
 
                 listaPedidos.add(pedido);
             }
         }
         return listaPedidos;
+    }
+
+    public boolean existePedido(String numPedido) {
+        try {
+            String sql = "SELECT 1 FROM pedido WHERE numPedido = ?";
+            try (Connection conn = ConexionDB.obtenerConexion();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, numPedido);
+                return ps.executeQuery().next();
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public void enviarPedido(String numPedido) throws SQLException {
+        String sql = "{CALL enviar_pedido(?)}";
+
+        try (Connection conn = ConexionDB.obtenerConexion();
+             java.sql.CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, numPedido);
+            cs.executeUpdate();
+        }
     }
 }

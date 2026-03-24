@@ -181,7 +181,7 @@ public class Main {
                         System.out.println(fecha);
                         System.out.print("Código de Artículo:");
                         String art = sc.nextLine();
-                        System.out.print("Email cliente: ");
+                        System.out.print("Email cliente o dejar vacío para crear nuevo cliente: ");
                         String mail = sc.nextLine();
                         try {
                             controlador.crearPedido(num, cant, art, mail);
@@ -190,7 +190,7 @@ public class Main {
                         } catch (TiendaException e) {
 
                             // CASO IMPORTANTE
-                            if (e.getMessage().equals("CLIENTE_NO_EXISTE")) {
+                            if (mail.isBlank()) {
 
                                 System.out.println("Cliente no existe. Vamos a crearlo.");
 
@@ -204,15 +204,18 @@ public class Main {
                                 System.out.print("NIF: ");
                                 String nif = sc.nextLine();
 
+                                System.out.print("Email cliente: ");
+                                String newmail = sc.nextLine();
+
                                 System.out.print("¿Premium? (s/n): ");
                                 boolean premium = sc.nextLine().equalsIgnoreCase("s");
 
                                 try {
                                     // Crear cliente
-                                    controlador.crearCliente(nom, dom, nif, mail, premium);
+                                    controlador.crearCliente(nom, dom, nif, newmail, premium);
 
                                     // Reintentar pedido
-                                    controlador.crearPedido(num, cant, art, mail);
+                                    controlador.crearPedido(num, cant, art, newmail);
 
                                     System.out.println("Cliente creado y pedido registrado");
 
@@ -229,7 +232,7 @@ public class Main {
                         System.out.print("Número de pedido a eliminar: ");
                         String num = sc.nextLine();
                         if (controlador.eliminarPedido(num)) System.out.println("Eliminado.");
-                        else throw new TiendaException("Erro: No se pudo eliminar (no existe o ya enviado).");
+                        else throw new TiendaException("Error: No se pudo eliminar (no existe o ya enviado).");
                     }
                     case 3 -> {
                         System.out.print("Introduce Email del cliente o Todos: ");

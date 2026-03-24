@@ -22,6 +22,9 @@ public class Articulo {
     public int getId() {
         return id;
     }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCodigo() {
         return codigo;
@@ -71,4 +74,6 @@ public class Articulo {
     public String toString() {
         return "Articulo{Codigo='%s', Descripcion='%s', Precio de Venta=%.2f€, Gastos de Envio=%.2f€, Tiempo de Preparacion=%d}".formatted(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
     }
+
+
 }

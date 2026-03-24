@@ -28,11 +28,13 @@ public class ArticuloDAO {
             cs.executeUpdate();
             System.out.println("Artículo guardado correctamente en la base de datos.");
         }
+        Articulo guardado = buscarPorCodigo(articulo.getCodigo());
+        if (guardado != null) {
+            articulo.setId(guardado.getId());
+        }
     }
 
-    // Importaciones extra necesarias arriba:
-    // import java.sql.ResultSet;
-    // import java.util.ArrayList;
+
 
     public ArrayList<Articulo> obtenerArticulos() throws SQLException {
         ArrayList<Articulo> listaArticulos = new ArrayList<>();
@@ -51,9 +53,34 @@ public class ArticuloDAO {
                         rs.getDouble("gastosEnvio"),
                         rs.getInt("tiempoPreparacion")
                 );
+                articulo.setId(rs.getInt("id"));
                 listaArticulos.add(articulo);
             }
         }
         return listaArticulos;
+    }
+
+    public Articulo buscarPorCodigo(String codigo) throws SQLException {
+        String sql = "SELECT * FROM articulo WHERE codigo = ?";
+
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, codigo);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Articulo a = new Articulo(
+                        codigo,
+                        rs.getString("descripcion"),
+                        rs.getDouble("precioVenta"),
+                        rs.getDouble("gastosEnvio"),
+                        rs.getInt("tiempoPreparacion")
+                );
+                a.setId(rs.getInt("id"));
+                return a;
+            }
+        }
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package poobdgroup.modelo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class Repositorio<T> implements Iterable<T>{
         return elementos.iterator();
     }
 
-    public void addAll(ArrayList<T> articulos) {
+    /*public void addAll(ArrayList<T> articulos) {
+    }*/
+
+    public void addAll(Collection<? extends T> nuevosElementos) {
+        elementos.addAll(nuevosElementos);
     }
 }

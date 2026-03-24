@@ -10,6 +10,7 @@ public class Pedido {
     private LocalDateTime fecha;
     private Articulo articulo;
     private Cliente cliente;
+    private boolean enviado = false;
 
 
     //Constructor
@@ -17,7 +18,7 @@ public class Pedido {
         this.numPedido = numPedido;
         this.cantidad = cantidad;
         this.fecha = fecha;
-
+        this.enviado = false;
     }
 
     //Getters y Setters
@@ -46,6 +47,13 @@ public class Pedido {
         this.cliente = cliente;
     }
 
+    public void setEnviado(boolean enviado) {
+        this.enviado = enviado;
+    }
+
+    public boolean isEnviado() {
+        return enviado;
+    }
     //Métodos
     public double precioEnvio() {
         if(articulo == null) return 0.0;
@@ -58,21 +66,35 @@ public class Pedido {
         return (cantidad * articulo.getPrecioVenta()) + precioEnvio();
     }
 
-    public boolean pedidoEnviado() {
+    /*public boolean pedidoEnviado() {
         // Lógica: si han pasado más de 'n' minutos desde la preparación, se considera enviado
         if (articulo == null || fecha == null) return false;
         return LocalDateTime.now().isAfter(fecha.plusMinutes(articulo.getTiempoPreparacion()));
 
+    }*/
+
+    public boolean pedidoEnviado() {
+        if (articulo == null || fecha == null) return false;
+
+        boolean porTiempo = fecha.plusMinutes(articulo.getTiempoPreparacion())
+                .isBefore(LocalDateTime.now());
+
+        if (porTiempo) {
+            enviado = true; // se actualiza en memoria
+        }
+        return enviado || porTiempo;
     }
 
     @Override
     public String toString() {
         String art = (articulo == null) ? "sin-articulo" : articulo.getCodigo();
         String cli = (cliente == null) ? "sin-cliente" : cliente.getEmail();
-        String tipo = getCliente().tipoCliente();
+        String tipo = (cliente == null) ? "sin-tipo" : cliente.tipoCliente();
         double gEnvio = precioEnvio();
         return "Pedido{numPedido='%s', cantidad=%d, fechaHora=%s, articulo=%s, cliente=%s, tipoCliente=%s, enviado=%s, GastosEnvio=%.2f€, total=%.2f€}".formatted(numPedido, cantidad, fecha, art, cli, tipo, pedidoEnviado(), gEnvio, calcularPrecioTotal());
     }
+
+
 }
 
 

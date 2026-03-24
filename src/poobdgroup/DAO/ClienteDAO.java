@@ -28,6 +28,10 @@ public class ClienteDAO {
 
             cs.executeUpdate();
         }
+        Cliente guardado = buscarPorEmail(cliente.getEmail());
+        if (guardado != null) {
+            cliente.setId(guardado.getId());
+        }
     }
 
     // Método para LEER
@@ -47,13 +51,50 @@ public class ClienteDAO {
                 String tipo = rs.getString("tipo");
 
                 // El "truco": instanciamos la clase correcta según lo que diga la base de datos
+                Cliente cliente;
                 if (tipo.equalsIgnoreCase("Premium")) {
-                    listaClientes.add(new ClientePremium(nombre, domicilio, nif, email));
+                    cliente = new ClientePremium(nombre, domicilio, nif, email);
                 } else {
-                    listaClientes.add(new ClienteEstandar(nombre, domicilio, nif, email));
+                    cliente = new ClienteEstandar(nombre, domicilio, nif, email);
                 }
+                cliente.setId(rs.getInt("id"));
+                listaClientes.add(cliente);
             }
         }
         return listaClientes;
+    }
+
+    public Cliente buscarPorEmail(String email) throws SQLException {
+        String sql = "SELECT * FROM cliente WHERE email = ?";
+
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String tipo = rs.getString("tipo");
+                Cliente cliente;
+
+                if (tipo.equalsIgnoreCase("Premium"))
+                    cliente = new ClientePremium(
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            email
+                    );
+                else
+                    cliente = new ClienteEstandar(
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            email
+                    );
+                cliente.setId(rs.getInt("id"));
+                return cliente;
+            }
+        }
+        return null;
     }
 }
