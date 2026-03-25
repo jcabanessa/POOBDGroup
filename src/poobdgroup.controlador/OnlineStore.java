@@ -6,7 +6,6 @@ import poobdgroup.DAO.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 
@@ -16,7 +15,6 @@ public class OnlineStore {
     private final ClienteDAO clienteDAO;
     private final ArticuloDAO articuloDAO;
     private final PedidoDAO pedidoDAO;
-    private Scanner sc;
 
     //Constructor
     public OnlineStore(Datos datos) {
