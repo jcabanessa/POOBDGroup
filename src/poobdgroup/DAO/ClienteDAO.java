@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ClienteDAO {
 
-    // Método para GUARDAR
+    // Metodo para guardar clientes con antiinyección SQL y llamada a Stored Procedure
     public void guardarCliente(Cliente cliente) throws SQLException {
         String sql = "{CALL insertar_cliente(?, ?, ?, ?, ?)}";
 
@@ -34,7 +34,7 @@ public class ClienteDAO {
         }
     }
 
-    // Método para LEER
+    // Metodo para obtener los clinetes de la BD con prepareStatements
     public ArrayList<Cliente> obtenerClientes() throws SQLException {
         ArrayList<Cliente> listaClientes = new ArrayList<>();
         String sql = "SELECT * FROM cliente";
@@ -50,7 +50,7 @@ public class ClienteDAO {
                 String email = rs.getString("email");
                 String tipo = rs.getString("tipo");
 
-                // El "truco": instanciamos la clase correcta según lo que diga la base de datos
+
                 Cliente cliente;
                 if (tipo.equalsIgnoreCase("Premium")) {
                     cliente = new ClientePremium(nombre, domicilio, nif, email);
@@ -64,6 +64,7 @@ public class ClienteDAO {
         return listaClientes;
     }
 
+    //Metodo para buscar cliente por email en BD con prepareStatements
     public Cliente buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT * FROM cliente WHERE email = ?";
 

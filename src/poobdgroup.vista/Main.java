@@ -4,12 +4,8 @@ package poobdgroup.vista;
 // [MermaidChart: 05d3e7bd-4e9f-42f9-b47c-a7cc5e8fc8cf]
 import poobdgroup.controlador.OnlineStore;
 import poobdgroup.excepciones.TiendaException;
-import poobdgroup.modelo.Datos;
-import poobdgroup.modelo.Repositorio;
-
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import java.util.Scanner;
 
@@ -19,10 +15,8 @@ import static java.lang.Integer.parseInt;
 public class Main {
     private final OnlineStore controlador;
     private final Scanner sc = new Scanner(System.in);
-    DateTimeFormatter df = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd
 
     public Main() {
-        Datos datos = new Datos(new Repositorio<>(),new Repositorio<>(), new Repositorio<>());
         controlador = new OnlineStore();
     }
 
@@ -119,7 +113,7 @@ public class Main {
 
     }
 
-    void gestionClientes() throws TiendaException {
+    void gestionClientes() {
         int op = -1;
         while(op != 0) {
             try {
@@ -163,7 +157,7 @@ public class Main {
         }
     }
 
-    void gestionPedidos() throws TiendaException {
+    void gestionPedidos() {
         int op = -1;
         while(op != 0) {
             try {
@@ -189,7 +183,7 @@ public class Main {
 
                         } catch (TiendaException e) {
 
-                            // CASO IMPORTANTE
+                            // Si se deja en balco el email se crea uno nuevo
                             if (mail.isBlank()) {
 
                                 System.out.println("Cliente no existe. Vamos a crearlo.");

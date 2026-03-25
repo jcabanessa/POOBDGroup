@@ -4,11 +4,13 @@ package poobdgroup.modelo;
 
 public class Datos {
 
+    //Se utiliza la clase Generica para crear los ArrayList
     private Repositorio<Articulo> articulos;
     private Repositorio<Cliente> clientes;
     private Repositorio<Pedido> pedidos;
 
 
+    //Constructores con sobrecarga
     public Datos(Repositorio<Pedido> pedidos, Repositorio<Cliente> clientes, Repositorio<Articulo> articulos) {
         this.articulos = (articulos != null) ? articulos : new Repositorio<>();
         this.clientes = (clientes != null) ? clientes : new Repositorio<>();
@@ -21,6 +23,7 @@ public class Datos {
         articulos = new Repositorio<>();
     }
 
+    //Getters
     public Repositorio<Articulo> getArticulos() {
         return articulos;
     }

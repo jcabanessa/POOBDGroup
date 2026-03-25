@@ -1,7 +1,7 @@
 package poobdgroup.modelo;
 
 public abstract class Cliente {
-    private int id;
+    private int id; //Se añade id para que coincida con BD
     private String nombre;
     private String domicilio;
     private String nif;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class ArticuloDAO {
 
+    //Metodo para guardar Articulo en BD con antiinyección SQL
     public void guardarArticulo(Articulo articulo) throws SQLException {
         // La consulta SQL con signos de interrogación para evitar inyecciones SQL
         String sql = "{CALL insertar_articulo(?, ?, ?, ?, ?)}";
@@ -36,6 +37,7 @@ public class ArticuloDAO {
 
 
 
+    //Metodo para obtener los articulos de la BD con prepareStatements
     public ArrayList<Articulo> obtenerArticulos() throws SQLException {
         ArrayList<Articulo> listaArticulos = new ArrayList<>();
         String sql = "SELECT * FROM articulo";
@@ -60,6 +62,7 @@ public class ArticuloDAO {
         return listaArticulos;
     }
 
+    //Metodo que busca por codigo en BD con prepareStatements
     public Articulo buscarPorCodigo(String codigo) throws SQLException {
         String sql = "SELECT * FROM articulo WHERE codigo = ?";
 

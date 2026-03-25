@@ -4,7 +4,6 @@ package poobdgroup.modelo;
 import java.time.LocalDateTime;
 
 public class Pedido {
-    private int id;
     private String numPedido;
     private int cantidad;
     private LocalDateTime fecha;
@@ -51,9 +50,7 @@ public class Pedido {
         this.enviado = enviado;
     }
 
-    public boolean isEnviado() {
-        return enviado;
-    }
+
     //Métodos
     public double precioEnvio() {
         if(articulo == null) return 0.0;
@@ -66,13 +63,7 @@ public class Pedido {
         return (cantidad * articulo.getPrecioVenta()) + precioEnvio();
     }
 
-    /*public boolean pedidoEnviado() {
-        // Lógica: si han pasado más de 'n' minutos desde la preparación, se considera enviado
-        if (articulo == null || fecha == null) return false;
-        return LocalDateTime.now().isAfter(fecha.plusMinutes(articulo.getTiempoPreparacion()));
-
-    }*/
-
+    //Metodo para cambiar el estado del pedido enviado en memoria a True
     public boolean pedidoEnviado() {
         if (articulo == null || fecha == null) return false;
 

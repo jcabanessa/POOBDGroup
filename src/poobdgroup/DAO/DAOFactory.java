@@ -1,5 +1,7 @@
 package poobdgroup.DAO;
 
+
+//Clase de estructura Factory para facilitar la interacción entre las clases DAO
 public class DAOFactory {
 
     private static final ClienteDAO clienteDAO = new ClienteDAO();

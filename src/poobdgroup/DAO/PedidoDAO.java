@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class PedidoDAO {
 
-    // Método para GUARDAR
+    // Metodo para guardar pedidos con antiinyección SQL y llamada a Stored Procedure
     public void guardarPedido(Pedido pedido) throws SQLException {
         String sql = "{CALL insertar_pedido(?, ?, ?, ?, ?)}";
 
@@ -31,7 +31,7 @@ public class PedidoDAO {
         }
     }
 
-    // Método para ELIMINAR
+    // Metodo para eliminar pedidos con antiinyección SQL y llamada a Stored Procedure
     public void eliminarPedido(String numPedido) throws SQLException {
         String sql = "{CALL eliminar_pedido(?)}";
 
@@ -43,11 +43,12 @@ public class PedidoDAO {
         }
     }
 
+    //Metodos para obtener pedidos de la BD con prepareStatements
     public ArrayList<Pedido> obtenerPedidos(
             Repositorio<Articulo> catalogoArticulos,
             Repositorio<Cliente> listaClientes) throws SQLException {
 
-        ArrayList<Pedido> listaPedidos = new java.util.ArrayList<>();
+        ArrayList<Pedido> listaPedidos = new ArrayList<>();
 
         String sql = """
         SELECT p.*, a.codigo, a.descripcion, a.precioVenta, a.gastosEnvio, a.tiempoPreparacion,
@@ -56,7 +57,6 @@ public class PedidoDAO {
         JOIN articulo a ON p.id_articulo = a.id
         JOIN cliente c ON p.id_cliente = c.id
     """;
-        //String sql = "SELECT * FROM pedido";
 
         try (Connection conn = ConexionDB.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -69,19 +69,9 @@ public class PedidoDAO {
                 // Convertimos el Timestamp de SQL de vuelta a LocalDateTime de Java
                 java.time.LocalDateTime fecha = rs.getTimestamp("fecha").toLocalDateTime();
 
-                int codArticulo = rs.getInt("id_articulo");
-                int emailCliente = rs.getInt("id_cliente");
-
                 Pedido pedido = new Pedido(numPedido, cantidad, fecha);
 
-                /*// Buscamos el artículo y el cliente correspondientes usando Streams
-                poobdgroup.modelo.Articulo art = catalogoArticulos.getAll().stream()
-                        .filter(a -> a.getId() == codArticulo)
-                        .findFirst().orElse(null);
 
-                poobdgroup.modelo.Cliente cli = listaClientes.getAll().stream()
-                        .filter(c -> c.getId() == emailCliente)
-                        .findFirst().orElse(null);*/
                 Articulo art = new Articulo(
                         rs.getString("codigo"),
                         rs.getString("descripcion"),
@@ -120,19 +110,9 @@ public class PedidoDAO {
         return listaPedidos;
     }
 
-    public boolean existePedido(String numPedido) {
-        try {
-            String sql = "SELECT 1 FROM pedido WHERE numPedido = ?";
-            try (Connection conn = ConexionDB.obtenerConexion();
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, numPedido);
-                return ps.executeQuery().next();
-            }
-        } catch (SQLException e) {
-            return false;
-        }
-    }
 
+
+    //Metodo para cambiar el estado del pedido a True y que quede guardado en BD
     public void enviarPedido(String numPedido) throws SQLException {
         String sql = "{CALL enviar_pedido(?)}";
 

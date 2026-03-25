@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static java.lang.Integer.parseInt;
+
 
 
 public class OnlineStore {
@@ -47,15 +47,7 @@ public class OnlineStore {
         }
     }
 
-    //Métodos
-    /*public void addCliente(Cliente cli) throws TiendaException {
-        if (cli == null) throw new TiendaException("Cliente nulo.");
-        if (datos.getClientes().stream().anyMatch(c -> c.getEmail().equals(cli.getEmail()))) {
-            throw new TiendaException("Error: El email ya está registrado.");
-        }
-        datos.getClientes().add(cli);
-    }*/
-
+    //Añadir cliente en memoria y a la base de datos
     public void addCliente(Cliente cli) throws TiendaException {
         // 1. Validaciones originales
         if (cli == null) throw new TiendaException("Cliente nulo.");
@@ -77,21 +69,8 @@ public class OnlineStore {
         }
     }
 
-    /*public void mostrarClientes(String tipo) throws TiendaException {
-        if (datos.getClientes().isEmpty()) {
-            throw new TiendaException("Error: No hay clientes registrados en el sistema.");
-        } else {
-            System.out.println("--- LISTADO DE CLIENTES ---");
-            for (Cliente c : datos.getClientes()) {
-                // Si tipo es "Todos" o coincide con el tipo del cliente, lo muestra
-                if (tipo.equalsIgnoreCase("Todos") || c.tipoCliente().equalsIgnoreCase(tipo)) {
-                    System.out.println(c + " | Tipo:" + c.tipoCliente());
 
-                }
-            }
-        }
-    }*/
-
+    //Muestra los clientes de la base de datos
     public void mostrarClientes(String tipo) throws TiendaException {
         try {
             // 1. Pedimos todos los clientes a BD
@@ -117,14 +96,9 @@ public class OnlineStore {
         }
     }
 
-   /* public void addArticulo (Articulo art) throws TiendaException {
-        if (art == null) throw new TiendaException("Artículo nulo.");
-        if (datos.getArticulos().stream().anyMatch(a -> a.getCodigo().equals(art.getCodigo()))) {
-            throw new TiendaException("Error: Ya existe un artículo con ese código.");
-        }
-        datos.getArticulos().add(art);
-    }*/
 
+
+    //Añadir articulo a la base de datos
     public void addArticulo(Articulo art) throws TiendaException {
         if (art == null) throw new TiendaException("Artículo nulo.");
 
@@ -144,17 +118,7 @@ public class OnlineStore {
         }
     }
 
-    /*public void mostrarArticulos () throws TiendaException {
-        if (datos.getArticulos().isEmpty()) {
-            throw new TiendaException("Error: No hay articulos que mostrar.");
-        } else {
-            System.out.println("--- LISTADO DE ARTICULOS ---");
-            for (Articulo a : datos.getArticulos()) {
-                System.out.println(a.toString());
-            }
-        }
-    }*/
-
+    //Muestra los articulos de la base de datos
     public void mostrarArticulos() throws TiendaException {
         try {
             // Pedimos los datos a DB
@@ -173,6 +137,7 @@ public class OnlineStore {
         }
     }
 
+    //Añadir pedido
     public void addPedido(String numPedido, int cantidad, LocalDateTime fecha,
                           String codArticulo, String emailCliente) throws TiendaException {
 
@@ -189,7 +154,7 @@ public class OnlineStore {
             throw new TiendaException("El pedido ya existe");
 
         try {
-            // 🔹 ARTICULO (memoria → BD)
+            // ARTICULO (memoria → BD)
             Articulo articulo = datos.getArticulos().getAll().stream()
                     .filter(a -> a.getCodigo().equalsIgnoreCase(codArticulo))
                     .findFirst()
@@ -202,7 +167,7 @@ public class OnlineStore {
                         .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
             }
 
-            // 🔹 CLIENTE (IMPORTANTE)
+            // CLIENTE
             Cliente cliente = datos.getClientes().getAll().stream()
                     .filter(c -> c.getEmail().equalsIgnoreCase(emailCliente))
                     .findFirst()
@@ -215,21 +180,21 @@ public class OnlineStore {
                         .orElse(null);
             }
 
-            // 🔥 SI NO EXISTE → LANZAR EXCEPCIÓN (NO CREAR)
+            // SI NO EXISTE → LANZAR EXCEPCIÓN
             if (cliente == null) {
                 throw new TiendaException("CLIENTE_NO_EXISTE");
             }
 
-            // 🔹 CREAR PEDIDO
+            // CREAR PEDIDO
             Pedido p = new Pedido(numPedido, cantidad, fecha);
             p.setArticulo(articulo);
             p.setCliente(cliente);
-            p.setEnviado(false); // MUY IMPORTANTE
+            p.setEnviado(false); // Aun no se envia
 
-            // 🔹 GUARDAR EN BD
+            // GUARDAR EN BD
             pedidoDAO.guardarPedido(p);
 
-            // 🔹 GUARDAR EN MEMORIA
+            // GUARDAR EN MEMORIA
             datos.getPedidos().add(p);
 
         } catch (java.sql.SQLException e) {
@@ -237,55 +202,7 @@ public class OnlineStore {
         }
     }
 
-    /*public void addPedido(String numPedido, int cantidad, LocalDateTime fecha, String codArticulo, String emailCliente) throws TiendaException {
-        if (numPedido == null || codArticulo == null || emailCliente == null) throw new TiendaException("Parámetros inválidos.");
-        if (datos.getPedidos().getAll().stream().anyMatch(p -> p.getNumPedido().equals(numPedido)))
-            throw new TiendaException("El pedido ya existe");
-
-        Articulo articulo = datos.getArticulos().getAll().stream()
-                .filter(a -> a.getCodigo().equals(codArticulo))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Artículo no encontrado"));
-
-        Cliente cliente = datos.getClientes().getAll().stream()
-                .filter(c -> c.getEmail().equals(emailCliente))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("CLIENTE_NO_EXISTE"));
-
-
-        Pedido p = new Pedido(numPedido, cantidad, fecha);
-        p.setArticulo(articulo);
-        p.setCliente(cliente);
-
-        // --- CONEXIÓN A BASE DE DATOS ---
-        try {
-            pedidoDAO.guardarPedido(p);
-
-            // Si se guardó en BD sin problemas, lo añadimos a la lista en memoria
-            datos.getPedidos().add(p);
-
-        } catch (java.sql.SQLException e) {
-            throw new TiendaException("Error al guardar el pedido en la base de datos: " + e.getMessage());
-        }
-    }*/
-
-    public boolean existeCliente(String email) {
-        return datos.getClientes().getAll().stream()
-                .anyMatch(c -> c.getEmail().equalsIgnoreCase(email));
-    }
-
-    /*public boolean eliminarPedido (String numPedido) throws TiendaException {
-        Pedido p = datos.getPedidos().stream()
-                .filter(pedido -> pedido.getNumPedido().equals(numPedido))
-                .findFirst()
-                .orElseThrow(() -> new TiendaException("Error: El pedido no existe."));
-
-        if (p.pedidoEnviado()) {
-            throw new TiendaException("Error: No se puede eliminar un pedido que ya ha sido enviado.");
-        }
-        return datos.getPedidos().remove(p);
-    }*/
-
+    //Elimina pedido si aun no ha sido enviado
     public boolean eliminarPedido(String numPedido) throws TiendaException {
         Pedido p = datos.getPedidos().getAll().stream()
                 .filter(pedido -> pedido.getNumPedido().equals(numPedido))
@@ -308,32 +225,7 @@ public class OnlineStore {
         }
     }
 
-    /*public void mostrarPedidosPendientes(String filtro) throws TiendaException {
-        System.out.println("=== PEDIDOS PENDIENTES ===");
-
-        boolean found = false;
-
-        try {
-            ArrayList<Pedido> lista = pedidoDAO.obtenerPedidos(datos.getArticulos(),
-                    datos.getClientes());
-
-            for (Pedido p : lista) {
-
-                if (!p.pedidoEnviado() && coincideFiltro(p, filtro)) {
-
-                    imprimirPedido(p);
-                    found = true;
-                }
-            }
-
-        } catch (Exception e) {
-            throw new TiendaException("Error al consultar pedidos: " + e.getMessage());
-        }
-
-        if (!found)
-            throw new TiendaException("No hay pedidos pendientes.");
-    }*/
-
+    //Mostrar pedidos pendientes (Se mantiene la lógica solo busca en memoria no en BD)
     public void mostrarPedidosPendientes (String mailOTipo) throws TiendaException {
         System.out.println("=== PEDIDOS PENDIENTES ===");
         boolean found = false;
@@ -358,30 +250,7 @@ public class OnlineStore {
         if (!found) throw new TiendaException("Error: No hay pedidos pendientes.");
     }
 
-    /*public void mostrarPedidosEnviados (String mailOTipo) throws TiendaException {
-        System.out.println("=== PEDIDOS ENVIADOS ===");
-        boolean found = false;
-        for (Pedido p : datos.getPedidos()) {
-            if (p.pedidoEnviado() &&
-                    (p.getCliente().getEmail().equalsIgnoreCase(mailOTipo))) {
-                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
-                }else
-                    System.out.println(p);
-                found = true;
-            }
-            else if(p.pedidoEnviado() &&
-                    (mailOTipo.equalsIgnoreCase("Todos") || p.getCliente().tipoCliente().equalsIgnoreCase(mailOTipo))) {
-                if(p.getCliente().tipoCliente().equalsIgnoreCase("Premium")){
-                    System.out.println(p + " |CuotaAnual para descuento 20% en envíos= " + p.getCliente().calcAnual());
-                }else
-                    System.out.println(p);
-                found = true;
-            }
-        }
-        if (!found) throw new TiendaException("Error: No hay pedidos enviados");
-    }*/
-
+    //Muestra pedidos enviados buscando en memoria y en BD
     public void mostrarPedidosEnviados(String filtro) throws TiendaException {
         System.out.println("=== PEDIDOS ENVIADOS ===");
 
@@ -422,6 +291,7 @@ public class OnlineStore {
             throw new TiendaException("No hay pedidos enviados.");
     }
 
+    //Metodo de apoyo para mostrar pedidos enviados y filtrar
     private boolean coincideFiltro(Pedido p, String filtro) {
 
         if (filtro == null || filtro.isBlank())
@@ -436,6 +306,7 @@ public class OnlineStore {
         return p.getCliente().tipoCliente().equalsIgnoreCase(filtro);
     }
 
+    //Metdodo de apoyo para imprimir el pedido desde memoria y filtrar
     private void imprimirPedido(Pedido p) {
 
         if (p.getCliente().tipoCliente().equalsIgnoreCase("Premium")) {
@@ -448,6 +319,8 @@ public class OnlineStore {
             System.out.println(p);
         }
     }
+
+    //Metodos de apoyo para crear Articulos, Clientes y Pedidos en el Main
 
     public void crearArticulo(String cod, String des, double pre, double env, int t) throws TiendaException {
         addArticulo(new Articulo(cod, des, pre, env, t));

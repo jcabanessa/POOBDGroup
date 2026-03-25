@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+//Clase Java Generics
 public class Repositorio<T> implements Iterable<T>{
 
     private List<T> elementos;
@@ -15,6 +16,10 @@ public class Repositorio<T> implements Iterable<T>{
 
     public void add(T elemento) {
         elementos.add(elemento);
+    }
+
+    public void addAll(Collection<? extends T> nuevosElementos) {
+        elementos.addAll(nuevosElementos);
     }
 
     public boolean remove(T elemento) {
@@ -37,10 +42,6 @@ public class Repositorio<T> implements Iterable<T>{
         return elementos.iterator();
     }
 
-    /*public void addAll(ArrayList<T> articulos) {
-    }*/
 
-    public void addAll(Collection<? extends T> nuevosElementos) {
-        elementos.addAll(nuevosElementos);
-    }
+
 }

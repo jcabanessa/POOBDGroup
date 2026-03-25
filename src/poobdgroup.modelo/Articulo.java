@@ -1,7 +1,7 @@
 package poobdgroup.modelo;
 
 public class Articulo {
-    private int id;
+    private int id;//Se añade id para que coincida con la BD
     private String codigo;
     private String descripcion;
     private double precioVenta;
@@ -30,43 +30,22 @@ public class Articulo {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getDescripcion() {
         return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public double getPrecioVenta() {
         return precioVenta;
     }
 
-    public void setPrecioVenta(double precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
     public double getGastosEnvio() {
         return gastosEnvio;
-    }
-
-    public void setGastosEnvio(double gastosEnvio) {
-        this.gastosEnvio = gastosEnvio;
     }
 
     public int getTiempoPreparacion() {
         return tiempoPreparacion;
     }
 
-    public void setTiempoPreparacion(int tiempoPreparacion) {
-        this.tiempoPreparacion = tiempoPreparacion;
-    }
-
-    //Métodos
 
 
     //toString
