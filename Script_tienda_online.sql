@@ -119,3 +119,16 @@ END$$
 
 DELIMITER ;
 
+ALTER TABLE pedido ADD enviado BOOLEAN DEFAULT FALSE;
+
+-- Stored Procedure Update pedidos enviados
+DELIMITER $$
+
+CREATE PROCEDURE enviar_pedido(IN p_numPedido VARCHAR(20))
+BEGIN
+    UPDATE pedido 
+    SET enviado = TRUE
+    WHERE numPedido = p_numPedido;
+END $$
+
+DELIMITER ;
