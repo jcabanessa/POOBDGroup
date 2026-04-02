@@ -1,0 +1,13 @@
+poodbgroup/
+├── controlador/ (OnlineStore.java - sin cambios)
+├── modelo/ (Cliente, Articulo, Pedido - sin cambios)
+├── vista/ (Main.java - sin cambios)
+├── excepciones/ (TiendaException.java)
+├── dao/
+│   ├── interfaces/ (ClienteDAO, ArticuloDAO, PedidoDAO)
+│   ├── mysql/ (ClienteDAOMySQL, ArticuloDAOMySQL, PedidoDAOMySQL)
+│   └── DAOFactory.java
+├── poodbgroupDAO/
+│   └── ConnectionManager.java
+└── sql/
+    └── script.sql (creación BD, tablas, procedimientos)
