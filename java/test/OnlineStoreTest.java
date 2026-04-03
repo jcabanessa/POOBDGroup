@@ -98,12 +98,12 @@ class OnlineStoreTest {
             controlador.addPedido("PF2", 1, LocalDateTime.now().minusMinutes(50), "A003", "eva@x.com");
 
             // filtrar pendientes por email (jon) y por Todos
-            assertDoesNotThrow(() -> controlador.mostrarPedidosPendientes("jon@x.com"));
-            assertDoesNotThrow(() -> controlador.mostrarPedidosPendientes("Todos"));
+            assertDoesNotThrow(() -> controlador.obtenerPedidosPendientes("jon@x.com"));
+            assertDoesNotThrow(() -> controlador.obtenerPedidosPendientes("Todos"));
 
             // filtrar enviados (should not throw)
-            assertDoesNotThrow(() -> controlador.mostrarPedidosEnviados("eva@x.com"));
-            assertDoesNotThrow(() -> controlador.mostrarPedidosEnviados("Todos"));
+            assertDoesNotThrow(() -> controlador.obtenerPedidosEnviados("eva@x.com"));
+            assertDoesNotThrow(() -> controlador.obtenerPedidosEnviados("Todos"));
 
         } catch (TiendaException e) {
             fail(e.getMessage());

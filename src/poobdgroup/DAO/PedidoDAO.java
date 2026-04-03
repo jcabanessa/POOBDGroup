@@ -2,10 +2,7 @@ package poobdgroup.DAO;
 
 import poobdgroup.modelo.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class PedidoDAO {
@@ -122,5 +119,21 @@ public class PedidoDAO {
             cs.setString(1, numPedido);
             cs.executeUpdate();
         }
+    }
+
+    public boolean existePedido(String numPedido) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM pedido WHERE numPedido = ?";
+
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, numPedido);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
     }
 }
