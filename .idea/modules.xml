@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/POOBDGroup.iml" filepath="$PROJECT_DIR$/POOBDGroup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/POOBDGroup.iml" filepath="$PROJECT_DIR$/.idea/POOBDGroup.iml" />
     </modules>
   </component>
 </project>
