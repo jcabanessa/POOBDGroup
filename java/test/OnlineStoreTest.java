@@ -51,7 +51,7 @@ class OnlineStoreTest {
 
     @Test
     void addPedidoErrorPorArticuloNoExistente() {
-        ClienteEstandar c = new ClienteEstandar("Ana", "C/Mayor", "123", "ana@x.com");
+        ClienteEstandar c = new ClienteEstandar("Andres", "C/Andrade 3", "1234", "andres@x.com");
         try {
             controlador.addCliente(c);
         } catch (TiendaException e) {
@@ -60,7 +60,7 @@ class OnlineStoreTest {
 
         // artículo A999 no existe -> debe lanzar TiendaException
         assertThrows(TiendaException.class, () ->
-                controlador.addPedido("P100", 1, LocalDateTime.now(), "A999", "ana@x.com")
+                controlador.addPedido("P100", 1, LocalDateTime.now(), "A999", "andres@x.com")
         );
     }
 
@@ -98,12 +98,12 @@ class OnlineStoreTest {
             controlador.addPedido("PF2", 1, LocalDateTime.now().minusMinutes(50), "A003", "eva@x.com");
 
             // filtrar pendientes por email (jon) y por Todos
-            assertDoesNotThrow(() -> controlador.obtenerPedidosPendientes("jon@x.com"));
-            assertDoesNotThrow(() -> controlador.obtenerPedidosPendientes("Todos"));
+            assertDoesNotThrow(() -> controlador.mostrarPedidosPendientes("jon@x.com"));
+            assertDoesNotThrow(() -> controlador.mostrarPedidosPendientes("Todos"));
 
             // filtrar enviados (should not throw)
-            assertDoesNotThrow(() -> controlador.obtenerPedidosEnviados("eva@x.com"));
-            assertDoesNotThrow(() -> controlador.obtenerPedidosEnviados("Todos"));
+            assertDoesNotThrow(() -> controlador.mostrarPedidosEnviados("eva@x.com"));
+            assertDoesNotThrow(() -> controlador.mostrarPedidosEnviados("Todos"));
 
         } catch (TiendaException e) {
             fail(e.getMessage());

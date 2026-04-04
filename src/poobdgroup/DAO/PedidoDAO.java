@@ -3,6 +3,7 @@ package poobdgroup.DAO;
 import poobdgroup.modelo.*;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class PedidoDAO {
@@ -17,8 +18,9 @@ public class PedidoDAO {
             cs.setString(1, pedido.getNumPedido());
             cs.setInt(2, pedido.getCantidad());
 
-            // Truco: Convertimos el LocalDateTime de Java al formato que entiende SQL
-            cs.setTimestamp(3, Timestamp.valueOf(pedido.getFecha()));
+
+            // Sin Timestamp: evita desfase de zona horaria
+            cs.setObject(3, pedido.getFecha());
 
             // Sacamos el ID directamente de los objetos que están dentro del pedido
             cs.setInt(4, pedido.getArticulo().getId());
@@ -63,8 +65,9 @@ public class PedidoDAO {
                 String numPedido = rs.getString("numPedido");
                 int cantidad = rs.getInt("cantidad");
 
-                // Convertimos el Timestamp de SQL de vuelta a LocalDateTime de Java
-                java.time.LocalDateTime fecha = rs.getTimestamp("fecha").toLocalDateTime();
+
+                // Leer LocalDateTime directamente*/
+                LocalDateTime fecha = rs.getObject("fecha", LocalDateTime.class);
 
                 Pedido pedido = new Pedido(numPedido, cantidad, fecha);
 
@@ -121,19 +124,17 @@ public class PedidoDAO {
         }
     }
 
-    public boolean existePedido(String numPedido) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM pedido WHERE numPedido = ?";
 
-        try (Connection conn = ConexionDB.obtenerConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, numPedido);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+    public boolean existePedido(String numPedido) {
+        try {
+            String sql = "SELECT 1 FROM pedido WHERE numPedido = ?";
+            try (Connection conn = ConexionDB.obtenerConexion();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, numPedido);
+                return ps.executeQuery().next();
             }
+        } catch (SQLException e) {
+            return false;
         }
-        return false;
     }
 }

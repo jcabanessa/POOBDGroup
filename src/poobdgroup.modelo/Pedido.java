@@ -75,6 +75,9 @@ public class Pedido {
         }
         return enviado || porTiempo;
     }
+    public boolean isEnviado() {
+        return enviado;
+    }
 
     @Override
     public String toString() {
