@@ -1,6 +1,7 @@
 // [MermaidChart: 05d3e7bd-4e9f-42f9-b47c-a7cc5e8fc8cf]
 package poobdgroup.vista;
 
+import poobdgroup.DAO.JPAUtil;
 import poobdgroup.controlador.OnlineStore;
 import poobdgroup.excepciones.TiendaException;
 
@@ -18,8 +19,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main prg = new Main();
-        prg.inicio();
+        try {
+            Main prg = new Main();
+            prg.inicio();
+        } finally {
+            JPAUtil.close();
+        }
+
     }
 
     void inicio() {
