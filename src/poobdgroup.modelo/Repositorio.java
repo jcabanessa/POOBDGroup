@@ -1,5 +1,7 @@
 package poobdgroup.modelo;
 
+import jakarta.persistence.Entity;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

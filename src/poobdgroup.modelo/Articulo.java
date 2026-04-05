@@ -82,7 +82,7 @@ public class Articulo {
     @Column(name = "tiempoPreparacion", nullable = false)
     private int tiempoPreparacion;
 
-    protected Articulo() {
+    public Articulo() {
     }
 
     public Articulo(String codigo, String descripcion, double precioVenta, double gastosEnvio, int tiempoPreparacion) {

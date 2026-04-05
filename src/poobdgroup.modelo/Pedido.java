@@ -123,7 +123,7 @@ public class Pedido {
     @Column(name = "enviado", nullable = false)
     private boolean enviado = false;
 
-    protected Pedido() {
+    public Pedido() {
     }
 
     public Pedido(String numPedido, int cantidad, LocalDateTime fecha) {

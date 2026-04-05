@@ -82,7 +82,7 @@ public abstract class Cliente {
     @Column(name = "email", nullable = false, unique = true, length = 30)
     private String email;
 
-    protected Cliente() {
+    public Cliente() {
     }
 
     public Cliente(String nombre, String domicilio, String nif, String email) {
