@@ -1,4 +1,4 @@
-package poobdgroup.DAO;
+/*package poobdgroup.DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,4 +15,4 @@ public class ConexionDB {
     public static Connection obtenerConexion() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, PASSWORD);
     }
-}
+}*/
