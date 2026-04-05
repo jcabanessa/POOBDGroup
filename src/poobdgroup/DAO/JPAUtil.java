@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+//Creación de EntityManagerFactory
 public final class JPAUtil {
 
     private static final EntityManagerFactory EMF =
