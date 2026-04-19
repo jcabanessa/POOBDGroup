@@ -41,6 +41,40 @@ public class OnlineStore {
         }
     }
 
+
+    // ================= ARTÍCULOS =================
+
+    public void addArticulo(Articulo art) throws TiendaException {
+        if (art == null) throw new TiendaException("Artículo nulo.");
+
+        try {
+            articuloDAO.guardarArticulo(art);
+            datos.getArticulos().add(art);
+        } catch (Exception e) {
+            throw new TiendaException("Error al guardar artículo: " + e.getMessage());
+        }
+    }
+
+    public String imprimirArticulos() throws TiendaException {
+        try {
+            ArrayList<Articulo> articulos = articuloDAO.obtenerArticulos();
+
+            if (articulos.isEmpty()) return "No hay artículos.";
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("--- LISTADO DE ARTÍCULOS ---\n");
+
+            for (Articulo a : articulos) {
+                sb.append(a).append("\n");
+            }
+
+            return sb.toString();
+
+        } catch (Exception e) {
+            throw new TiendaException("Error al obtener artículos: " + e.getMessage());
+        }
+    }
+
     // ================= CLIENTES =================
 
     public void addCliente(Cliente cli) throws TiendaException {
@@ -79,38 +113,7 @@ public class OnlineStore {
         }
     }
 
-    // ================= ARTÍCULOS =================
 
-    public void addArticulo(Articulo art) throws TiendaException {
-        if (art == null) throw new TiendaException("Artículo nulo.");
-
-        try {
-            articuloDAO.guardarArticulo(art);
-            datos.getArticulos().add(art);
-        } catch (Exception e) {
-            throw new TiendaException("Error al guardar artículo: " + e.getMessage());
-        }
-    }
-
-    public String imprimirArticulos() throws TiendaException {
-        try {
-            ArrayList<Articulo> articulos = articuloDAO.obtenerArticulos();
-
-            if (articulos.isEmpty()) return "No hay artículos.";
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("--- LISTADO DE ARTÍCULOS ---\n");
-
-            for (Articulo a : articulos) {
-                sb.append(a).append("\n");
-            }
-
-            return sb.toString();
-
-        } catch (Exception e) {
-            throw new TiendaException("Error al obtener artículos: " + e.getMessage());
-        }
-    }
 
     // ================= PEDIDOS =================
 

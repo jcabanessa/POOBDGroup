@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="poobdgroup.vista.MainViewController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <top>
+        <Label text="TIENDA ONLINE"
+               style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    </top>
+
+    <center>
+        <TabPane>
+
+            <!-- CLIENTES -->
+            <Tab text="Clientes">
+                <VBox spacing="5">
+                    <TextField fx:id="txtNombre" promptText="Nombre"/>
+                    <TextField fx:id="txtDom" promptText="Domicilio"/>
+                    <TextField fx:id="txtNif" promptText="NIF"/>
+                    <TextField fx:id="txtEmail" promptText="Email"/>
+
+                    <Button text="Crear Cliente" onAction="#crearCliente"/>
+                    <Button text="Listar Clientes" onAction="#listarClientes"/>
+                </VBox>
+            </Tab>
+
+            <!-- ARTÍCULOS -->
+            <Tab text="Artículos">
+                <VBox spacing="5">
+                    <TextField fx:id="txtCodArt" promptText="Código"/>
+                    <TextField fx:id="txtDescArt" promptText="Descripción"/>
+                    <TextField fx:id="txtPrecio" promptText="Precio"/>
+                    <TextField fx:id="txtEnvio" promptText="Gastos Envío"/>
+                    <TextField fx:id="txtTiempo" promptText="Tiempo preparación"/>
+
+                    <Button text="Crear Artículo" onAction="#crearArticulo"/>
+                    <Button text="Listar Artículos" onAction="#listarArticulos"/>
+                </VBox>
+            </Tab>
+
+            <!-- PEDIDOS -->
+            <Tab text="Pedidos">
+                <VBox spacing="5">
+                    <TextField fx:id="txtPedido" promptText="Num Pedido"/>
+                    <TextField fx:id="txtCantidad" promptText="Cantidad"/>
+                    <TextField fx:id="txtCodPedido" promptText="Código Artículo"/>
+                    <TextField fx:id="txtEmailPedido" promptText="Email Cliente"/>
+
+                    <Button text="Crear Pedido" onAction="#crearPedido"/>
+                    <Button text="Ver Pendientes" onAction="#verPendientes"/>
+                    <Button text="Ver Enviados" onAction="#verEnviados"/>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <bottom>
+        <TextArea fx:id="outputArea" prefHeight="200"/>
+    </bottom>
+
+</BorderPane>
