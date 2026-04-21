@@ -73,7 +73,23 @@ public class MainViewController {
     private void listarClientes() {
         try {
             mostrar(store.imprimirClientes("Todos"));
+        } catch (TiendaException e) {
+            mostrar(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void listarEstandar() {
+        try {
             mostrar(store.imprimirClientes("Estandar"));
+        } catch (TiendaException e) {
+            mostrar(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void listarPremium() {
+        try {
             mostrar(store.imprimirClientes("Premium"));
         } catch (TiendaException e) {
             mostrar(e.getMessage());

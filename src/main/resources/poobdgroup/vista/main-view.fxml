@@ -41,10 +41,12 @@
                     <TextField fx:id="txtDom" promptText="Domicilio" />
                     <TextField fx:id="txtNif" promptText="NIF" />
                     <TextField fx:id="txtEmail" promptText="Email" />
-                    <TextField fx:id="txtTipo" promptText="Tipo" />
+                    <TextField fx:id="txtTipo" promptText="Tipo Premium? (Introduce True, vacío para Estandar)" />
 
                     <Button onAction="#crearCliente" text="Crear Cliente" />
-                    <Button onAction="#listarClientes" text="Listar Clientes" />
+                    <Button onAction="#listarClientes" text="Listar Todos" />
+                    <Button onAction="#listarEstandar" text="Listar Estandar" />
+                    <Button onAction="#listarPremium" text="Listar Premium" />
                 </VBox>
             </Tab>
 
