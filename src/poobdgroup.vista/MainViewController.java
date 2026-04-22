@@ -11,6 +11,12 @@ public class MainViewController {
 
     @FXML private TextArea outputArea;
 
+    @FXML private TextField txtEmailTipo;
+
+    @FXML private TextField txtEmailTipoEnv;
+
+    @FXML private TextField txtCodPed;
+
     @FXML private TextField txtCodArt, txtDescArt, txtPrecio, txtEnvio, txtTiempo;
 
     @FXML private TextField txtNombre, txtDom, txtNif, txtEmail, txtTipo;
@@ -35,6 +41,7 @@ public class MainViewController {
                     Integer.parseInt(txtTiempo.getText())
             );
             mostrar("Artículo creado correctamente");
+            txtCodArt.clear(); txtDescArt.clear(); txtPrecio.clear(); txtEnvio.clear(); txtTiempo.clear();
 
         } catch (Exception e) {
             mostrar("Error: " + e.getMessage());
@@ -63,6 +70,7 @@ public class MainViewController {
                     Boolean.parseBoolean(txtTipo.getText())
             );
             mostrar("Cliente creado correctamente");
+            txtNombre.clear(); txtDom.clear(); txtNif.clear(); txtEmail.clear(); txtTipo.clear();
 
         } catch (TiendaException e) {
             mostrar(e.getMessage());
@@ -110,6 +118,7 @@ public class MainViewController {
                     txtEmailPedido.getText()
             );
             mostrar("Pedido creado correctamente");
+            txtPedido.clear(); txtCantidad.clear(); txtCodPedido.clear(); txtEmailPedido.clear();
 
         } catch (Exception e) {
             mostrar("Error: " + e.getMessage());
@@ -119,8 +128,21 @@ public class MainViewController {
     @FXML
     private void verPendientes() {
         try {
-            mostrar(store.mostrarPedidosPendientes("Todos"));
+            String emailTipo = txtEmailTipo.getText();
+            mostrar(store.mostrarPedidosPendientes(emailTipo));
+            txtEmailTipo.clear();
         } catch (TiendaException e) {
+            mostrar(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void delPedido() {
+        try {
+            String codPed = txtCodPed.getText();
+            store.eliminarPedido(codPed);
+            mostrar("Pedido eliminado correctamente");
+        }catch (TiendaException e) {
             mostrar(e.getMessage());
         }
     }
@@ -128,7 +150,8 @@ public class MainViewController {
     @FXML
     private void verEnviados() {
         try {
-            mostrar(store.mostrarPedidosEnviados("Todos"));
+            String emailTipoEnv = txtEmailTipoEnv.getText();
+            mostrar(store.mostrarPedidosEnviados(emailTipoEnv));
         } catch (TiendaException e) {
             mostrar(e.getMessage());
         }

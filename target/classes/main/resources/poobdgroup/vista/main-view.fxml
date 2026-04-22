@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="poobdgroup.vista.MainViewController">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poobdgroup.vista.MainViewController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
@@ -41,7 +41,7 @@
                     <TextField fx:id="txtDom" promptText="Domicilio" />
                     <TextField fx:id="txtNif" promptText="NIF" />
                     <TextField fx:id="txtEmail" promptText="Email" />
-                    <TextField fx:id="txtTipo" promptText="Tipo" />
+                    <TextField fx:id="txtTipo" promptText="Tipo Premium? (Introduce True, vacío para Estandar)" />
 
                     <Button onAction="#crearCliente" text="Crear Cliente" />
                     <Button onAction="#listarClientes" text="Listar Todos" />
@@ -59,7 +59,11 @@
                     <TextField fx:id="txtEmailPedido" promptText="Email Cliente" />
 
                     <Button onAction="#crearPedido" text="Crear Pedido" />
+                    <TextField fx:id="" promptText="Introduce código de Pedido a eliminar" />
+                    <Button onAction="#delPedido" text="Eliminar Pedido" />
+                    <TextField fx:id="txtEmailTipo" promptText="Filtrar Pedidos Pendientes por Tipo/Email" />
                     <Button onAction="#verPendientes" text="Ver Pendientes" />
+                    <TextField fx:id="txtEmailTipoEnv" promptText="Filtrar Pedidos Enviados por Tipo/Email" />
                     <Button onAction="#verEnviados" text="Ver Enviados" />
                 </VBox>
             </Tab>
