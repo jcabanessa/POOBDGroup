@@ -56,10 +56,10 @@
                     <TextField fx:id="txtPedido" promptText="Num Pedido" />
                     <TextField fx:id="txtCantidad" promptText="Cantidad" />
                     <TextField fx:id="txtCodPedido" promptText="Código Artículo" />
-                    <TextField fx:id="txtEmailPedido" promptText="Email Cliente" />
+                    <TextField fx:id="txtEmailPedido" promptText="Email Cliente (Vacío, ir a pestaña Clientes para crearlo)" />
 
                     <Button onAction="#crearPedido" text="Crear Pedido" />
-                    <TextField fx:id="" promptText="Introduce código de Pedido a eliminar" />
+                    <TextField fx:id="txtCodPed" promptText="Introduce código de Pedido a eliminar" />
                     <Button onAction="#delPedido" text="Eliminar Pedido" />
                     <TextField fx:id="txtEmailTipo" promptText="Filtrar Pedidos Pendientes por Tipo/Email" />
                     <Button onAction="#verPendientes" text="Ver Pendientes" />

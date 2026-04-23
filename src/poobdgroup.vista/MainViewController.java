@@ -125,6 +125,39 @@ public class MainViewController {
         }
     }
 
+    /*@FXML
+    private void crearPedido() {
+        try {
+            String num = txtPedido.getText().trim();
+            int cant = Integer.parseInt(txtCantidad.getText().trim());
+            String codArt = txtCodPedido.getText().trim();
+            String emailPedido = txtEmailPedido.getText().trim();
+
+            // Si el email está vacío, crear cliente nuevo sin salir de la pestaña
+            if (emailPedido.isBlank()) {
+                Cliente nuevo = pedirClienteNuevo();
+                if (nuevo == null) {
+                    mostrar("Alta de cliente cancelada.");
+                    return;
+                }
+
+                store.addCliente(nuevo);
+                emailPedido = nuevo.getEmail();
+            }
+
+            store.crearPedido(num, cant, codArt, emailPedido);
+            mostrar("Pedido creado correctamente");
+
+            txtPedido.clear();
+            txtCantidad.clear();
+            txtCodPedido.clear();
+            txtEmailPedido.clear();
+
+        } catch (Exception e) {
+            mostrar("Error: " + e.getMessage());
+        }
+    }*/
+
     @FXML
     private void verPendientes() {
         try {
@@ -142,6 +175,7 @@ public class MainViewController {
             String codPed = txtCodPed.getText();
             store.eliminarPedido(codPed);
             mostrar("Pedido eliminado correctamente");
+            txtCodPed.clear();
         }catch (TiendaException e) {
             mostrar(e.getMessage());
         }
@@ -152,6 +186,7 @@ public class MainViewController {
         try {
             String emailTipoEnv = txtEmailTipoEnv.getText();
             mostrar(store.mostrarPedidosEnviados(emailTipoEnv));
+            txtEmailTipoEnv.clear();
         } catch (TiendaException e) {
             mostrar(e.getMessage());
         }
